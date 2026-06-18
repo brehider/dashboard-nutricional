@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard Seguimiento Nutricional — Antioquia</title>
+<link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a2e;min-height:100vh}
+.topbar{background:#1e3a5f;padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:#fff}
+.topbar-brand i{font-size:20px;color:#60a5fa}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-meta{font-size:11px;color:#93c5fd}
+.btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:5px 11px;border-radius:7px;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;transition:all .15s}
+.btn:hover{background:rgba(255,255,255,.2)}
+.btn-clear{background:#ef4444;border-color:#ef4444;color:#fff}
+.btn-clear:hover{background:#dc2626}
+
+#errorScreen{display:none;align-items:center;justify-content:center;min-height:calc(100vh - 54px);padding:2rem;text-align:center}
+.err-card{background:#fff;border-radius:16px;padding:2rem;max-width:400px;border:1px solid #fee2e2}
+.err-card i{font-size:48px;color:#ef4444}
+.err-title{font-size:16px;font-weight:600;color:#dc2626;margin:.75rem 0 .5rem}
+.err-msg{font-size:13px;color:#6b7280}
+.btn-retry{margin-top:1rem;display:inline-flex;align-items:center;gap:5px;font-size:13px;padding:7px 14px;border-radius:8px;cursor:pointer;border:1px solid #d1d5db;background:#fff;color:#374151}
+
+#loadingScreen{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 54px)}
+.spinner-wrap{text-align:center}
+.spinner{width:44px;height:44px;border:3px solid #e5e7eb;border-top-color:#2563eb;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;color:#374151;font-weight:500}
+.loading-sub{font-size:12px;color:#9ca3af;margin-top:5px}
+
+#dashScreen{display:none;padding:1rem 1.25rem 2rem}
+
+/* FILTRO ACTIVO */
+.filter-bar{display:none;align-items:center;gap:8px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:.6rem 1rem;margin-bottom:1rem;font-size:13px;color:#1e40af;flex-wrap:wrap}
+.filter-bar.active{display:flex}
+.filter-tag{background:#2563eb;color:#fff;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:4px}
+.filter-tag i{cursor:pointer;font-size:13px}
+
+/* KPIs */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:1rem}
+.kpi{background:#fff;border-radius:10px;border:1px solid #e5e7eb;padding:.85rem 1rem;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
+.kpi:hover{border-color:#93c5fd;transform:translateY(-1px)}
+.kpi.active{border-color:#2563eb;background:#eff6ff}
+.kpi-label{font-size:11px;color:#6b7280;font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.kpi-value{font-size:24px;font-weight:700;line-height:1}
+.kpi-sub{font-size:11px;color:#9ca3af;margin-top:3px}
+.kpi-bar{position:absolute;bottom:0;left:0;height:3px;background:currentColor;opacity:.3;transition:width .4s}
+
+/* TABLA */
+.table-wrap{background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;margin-bottom:1rem}
+.table-header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-bottom:1px solid #f3f4f6}
+.table-title{font-size:13px;font-weight:600;color:#374151}
+.table-count{font-size:11px;color:#9ca3af}
+.table-scroll{overflow-x:auto;max-height:260px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead{position:sticky;top:0;background:#f9fafb;z-index:1}
+th{padding:8px 10px;text-align:left;font-weight:600;color:#6b7280;border-bottom:1px solid #e5e7eb;white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid #f3f4f6;color:#374151;white-space:nowrap}
+tr:hover td{background:#f9fafb}
+.badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:5px;font-weight:500}
+.b-sev{background:#fee2e2;color:#991b1b}
+.b-mod{background:#fef3c7;color:#92400e}
+.b-risk{background:#fef9c3;color:#854d0e}
+.b-ok{background:#dcfce7;color:#166534}
+.b-sob{background:#dbeafe;color:#1e40af}
+.b-nd{background:#f3f4f6;color:#6b7280}
+
+/* CHARTS */
+.section-title{font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin:1rem 0 .5rem}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.chart-box{background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:.9rem 1rem;cursor:pointer;transition:border .15s}
+.chart-box:hover{border-color:#93c5fd}
+.chart-box.full{grid-column:1/-1}
+.chart-box.has-filter{border-color:#2563eb;background:#eff6ff}
+.chart-title{font-size:12px;font-weight:600;margin-bottom:.4rem;color:#374151;display:flex;align-items:center;justify-content:space-between}
+.chart-hint{font-size:10px;color:#9ca3af;font-weight:400}
+.leg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:5px;font-size:10px;color:#6b7280}
+.leg span{display:flex;align-items:center;gap:3px;cursor:pointer}
+.leg-sq{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.mun-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px}
+.mun-row{display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;padding:3px 0}
+.mun-row:hover .mun-name{color:#2563eb}
+.mun-bar-wrap{flex:1;height:6px;background:#f3f4f6;border-radius:4px;overflow:hidden}
+.mun-bar{height:100%;border-radius:4px;background:#2563eb;transition:width .4s}
+.mun-name{width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#6b7280;transition:color .15s}
+.mun-n{width:24px;text-align:right;font-weight:600;font-size:10px;color:#374151}
+.pagination{display:flex;align-items:center;gap:6px;padding:.6rem 1rem;border-top:1px solid #f3f4f6;flex-wrap:wrap}
+.page-btn{min-width:30px;height:30px;padding:0 8px;font-size:12px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;color:#374151;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s}
+.page-btn:hover{background:#f3f4f6}
+.page-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.page-btn:disabled{opacity:.4;cursor:default}
+.page-info{font-size:11px;color:#9ca3af;margin-left:auto}
+
+@media(max-width:640px){
+  .chart-row{grid-template-columns:1fr}
+  .chart-box.full{grid-column:1}
+  #dashScreen{padding:.75rem}
+  .kpi-grid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <i class="ti ti-heart-rate-monitor"></i>
+    Seguimiento Nutricional — Antioquia
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-meta" id="topMeta"></span>
+    <button class="btn" id="btnClear" style="display:none" onclick="clearFilters()"><i class="ti ti-x"></i> Limpiar filtros</button>
+    <button class="btn" id="btnRefresh" style="display:none" onclick="reload()"><i class="ti ti-refresh"></i> Actualizar</button>
+  </div>
+</div>
+
+<div id="loadingScreen">
+  <div class="spinner-wrap">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loadingMsg">Conectando con ArcGIS...</div>
+    <div class="loading-sub" id="loadingSub"></div>
+  </div>
+</div>
+
+<div id="errorScreen">
+  <div class="err-card">
+    <i class="ti ti-wifi-off"></i>
+    <div class="err-title">Error de conexión</div>
+    <div class="err-msg" id="errMsg"></div>
+    <button class="btn-retry" onclick="init()"><i class="ti ti-refresh"></i> Reintentar</button>
+  </div>
+</div>
+
+<div id="dashScreen">
+  <div class="filter-bar" id="filterBar">
+    <i class="ti ti-filter" style="font-size:15px"></i>
+    <span style="font-weight:600">Filtro activo:</span>
+    <div id="filterTags"></div>
+    <button class="btn-clear btn" onclick="clearFilters()" style="margin-left:auto"><i class="ti ti-x"></i> Limpiar</button>
+  </div>
+
+  <div class="kpi-grid" id="kpis"></div>
+
+  <div class="section-title">Tabla de registros <span style="font-weight:400;color:#9ca3af" id="tableSubtitle"></span></div>
+  <div class="table-wrap">
+    <div class="table-header">
+      <div class="table-title">Niños y niñas</div>
+      <div class="table-count" id="tableCount"></div>
+    </div>
+    <div class="table-scroll">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Municipio</th>
+            <th>Subregión</th>
+            <th>Edad</th>
+            <th>Sexo</th>
+            <th>Peso / Talla</th>
+            <th>Talla / Edad</th>
+            <th>Semana</th>
+            <th>Origen</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <div class="section-title">Diagnóstico nutricional</div>
+  <div class="chart-row">
+    <div class="chart-box" id="box-pt">
+      <div class="chart-title">Clasificación peso / talla <span class="chart-hint">clic para filtrar</span></div>
+      <div class="leg" id="leg-pt"></div>
+      <div style="position:relative;height:210px"><canvas id="cPT" role="img" aria-label="Peso/talla"></canvas></div>
+    </div>
+    <div class="chart-box" id="box-te">
+      <div class="chart-title">Clasificación talla / edad <span class="chart-hint">clic para filtrar</span></div>
+      <div class="leg" id="leg-te"></div>
+      <div style="position:relative;height:210px"><canvas id="cTE" role="img" aria-label="Talla/edad"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">Distribución geográfica</div>
+  <div class="chart-row">
+    <div class="chart-box full" id="box-sub">
+      <div class="chart-title">Registros por subregión <span class="chart-hint">clic para filtrar</span></div>
+      <div style="position:relative;height:185px"><canvas id="cSub" role="img" aria-label="Subregiones"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">Top municipios <span style="font-weight:400;color:#9ca3af">(clic para filtrar)</span></div>
+  <div class="mun-list" id="munList"></div>
+
+  <div class="section-title">Demografía</div>
+  <div class="chart-row">
+    <div class="chart-box" id="box-edad">
+      <div class="chart-title">Grupos de edad <span class="chart-hint">clic para filtrar</span></div>
+      <div style="position:relative;height:195px"><canvas id="cEdad" role="img" aria-label="Edad"></canvas></div>
+    </div>
+    <div class="chart-box" id="box-sex">
+      <div class="chart-title">Sexo <span class="chart-hint">clic para filtrar</span></div>
+      <div class="leg" id="leg-sex"></div>
+      <div style="position:relative;height:195px"><canvas id="cSex" role="img" aria-label="Sexo"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">Cobertura semanal</div>
+  <div class="chart-row">
+    <div class="chart-box full" id="box-sem">
+      <div class="chart-title">Registros por semana epidemiológica <span class="chart-hint">clic para filtrar</span></div>
+      <div style="position:relative;height:175px"><canvas id="cSem" role="img" aria-label="Semanas"></canvas></div>
+    </div>
+  </div>
+
+  <div class="section-title">Origen y tipo</div>
+  <div class="chart-row">
+    <div class="chart-box" id="box-ori">
+      <div class="chart-title">Origen del registro <span class="chart-hint">clic para filtrar</span></div>
+      <div class="leg" id="leg-ori"></div>
+      <div style="position:relative;height:195px"><canvas id="cOri" role="img" aria-label="Origen"></canvas></div>
+    </div>
+    <div class="chart-box" id="box-tipo">
+      <div class="chart-title">Tipo de participante <span class="chart-hint">clic para filtrar</span></div>
+      <div class="leg" id="leg-tipo"></div>
+      <div style="position:relative;height:195px"><canvas id="cTipo" role="img" aria-label="Tipo"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const SVC_URL = "https://services5.arcgis.com/K90UQIB09TmTjUL8/arcgis/rest/services/service_1a7781c499504e5182f97482a10dc366/FeatureServer/0";
+
+let ALL_DATA  = [];
+let charts    = {};
+let FILTERS   = {}; // {dimension: value}
+let KEYS      = {}; // field name mapping
+
+// ── UTILS ──────────────────────────────────────────
+function show(id){
+  ['loadingScreen','errorScreen','dashScreen'].forEach(s=>{
+    const el=document.getElementById(s);
+    el.style.display = s===id ? (s==='loadingScreen'||s==='errorScreen'?'flex':'block') : 'none';
+  });
+}
+function setLoading(msg,sub=''){
+  document.getElementById('loadingMsg').textContent=msg;
+  document.getElementById('loadingSub').textContent=sub;
+}
+function countBy(arr,key){
+  const c={};
+  arr.forEach(r=>{const v=r[key];if(v!=null&&String(v).trim()!==''){c[v]=(c[v]||0)+1;}});
+  return c;
+}
+function topN(obj,n){return Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,n);}
+function findKey(sample,candidates){
+  const keys=Object.keys(sample||{});
+  for(const c of candidates){
+    const f=keys.find(k=>k===c||k.toLowerCase()===c.toLowerCase()||
+      k.replace(/[^a-z0-9]/gi,'').toLowerCase()===c.replace(/[^a-z0-9]/gi,'').toLowerCase());
+    if(f)return f;
+  }
+  for(const c of candidates){
+    const f=keys.find(k=>k.toLowerCase().includes(c.toLowerCase().substring(0,5)));
+    if(f)return f;
+  }
+  return null;
+}
+function getEdadGrupo(e){
+  const n=parseInt(e||0);
+  if(n<=5)return '0-5m';
+  if(n<=11)return '6-11m';
+  if(n<=23)return '12-23m';
+  if(n<=35)return '24-35m';
+  if(n<=47)return '36-47m';
+  return '48-71m';
+}
+function getSexLabel(v){
+  const m={'1':'Masculino','2':'Femenino','M':'Masculino','F':'Femenino'};
+  return m[v]||v;
+}
+function getTipoLabel(v){
+  const m={'1':'< 6 meses','2':'6-71 meses','3':'Gestante'};
+  return m[v]||v;
+}
+function getBadgePT(v){
+  if(!v) return '<span class="badge b-nd">Sin dato</span>';
+  const s=v.toLowerCase();
+  if(s.includes('severa')) return `<span class="badge b-sev">${v}</span>`;
+  if(s.includes('moderada')) return `<span class="badge b-mod">${v}</span>`;
+  if(s.includes('riesgo')) return `<span class="badge b-risk">${v}</span>`;
+  if(s.includes('adecuado')) return `<span class="badge b-ok">${v}</span>`;
+  if(s.includes('sobrepeso')||s.includes('obesidad')) return `<span class="badge b-sob">${v}</span>`;
+  return `<span class="badge b-nd">${v}</span>`;
+}
+
+// ── CARGA ───────────────────────────────────────────
+async function init(){
+  show('loadingScreen');
+  setLoading('Conectando con ArcGIS...','Consultando Feature Layer');
+  try{
+    let offset=0, all=[];
+    while(true){
+      const p=new URLSearchParams({where:'1=1',outFields:'*',resultOffset:offset,resultRecordCount:2000,f:'json'});
+      const r=await fetch(`${SVC_URL}/query?${p}`);
+      const j=await r.json();
+      if(j.error) throw new Error(j.error.message);
+      if(!j.features||j.features.length===0) break;
+      all=all.concat(j.features.map(f=>f.attributes));
+      setLoading('Cargando registros...',`${all.length} registros obtenidos`);
+      if(!j.exceededTransferLimit) break;
+      offset+=2000;
+    }
+    if(all.length===0) throw new Error('La capa no tiene datos o no es pública');
+    ALL_DATA=all;
+    detectKeys(all[0]);
+    enrichData();
+    FILTERS={};
+    render();
+    document.getElementById('btnRefresh').style.display='inline-flex';
+    document.getElementById('topMeta').textContent=`${all.length.toLocaleString()} registros · ${new Date().toLocaleTimeString('es-CO')}`;
+    show('dashScreen');
+  } catch(e){
+    document.getElementById('errMsg').textContent=e.message||'Error desconocido';
+    show('errorScreen');
+  }
+}
+
+async function reload(){
+  FILTERS={};
+  await init();
+}
+
+function detectKeys(sample){
+  // Nombres exactos confirmados desde el Feature Service
+  KEYS={
+    origen:     'estado_nino',
+    pt:         'clasificacion_pesotalla',      // Clasificación Peso/Talla Actual
+    te:         'clasificacion_tallaedadactual', // Clasificación Talla/Edad actual
+    sem:        'semana',
+    tipo:       'tipo_participante',
+    edad:       'edadMeses',
+    // SIVIGILA / ARRULLOS
+    nombre_siv: 'nom_ape_completos',
+    sexo_siv:   'sexo',
+    mun_siv:    'municipio',
+    sub_siv:    'subregion',
+    // NUEVO
+    nombre1:    'primer_nombre_nuevo',
+    nombre2:    'segundo_nombre_nuevo',
+    apellido1:  'primer_apellido_nuevo',
+    apellido2:  'segundo_apellido_nuevo',
+    sexo_new:   'sexo_2',
+    mun_new:    'municipio_nuevo',
+    sub_new:    'subregion_calc',
+  };
+}
+
+const MUNICIPIO_MAP = {
+  '05120':'Cáceres','05154':'Caucasia','05250':'El Bagre','05495':'Nechí',
+  '05790':'Tarazá','05895':'Zaragoza','05579':'Puerto Berrío','05585':'Puerto Nare',
+  '05591':'Puerto Triunfo','05893':'Yondó','05142':'Caracolí','05425':'Maceo',
+  '05031':'Amalfi','05040':'Anorí','05190':'Cisneros','05604':'Remedios',
+  '05670':'San Roque','05690':'Santo Domingo','05736':'Segovia','05858':'Vegachí',
+  '05885':'Yalí','05890':'Yolombó','05038':'Angostura','05086':'Belmira',
+  '05107':'Briceño','05134':'Campamento','05150':'Carolina del Príncipe',
+  '05237':'Don Matías','05264':'Entrerríos','05310':'Gómez Plata','05315':'Guadalupe',
+  '05361':'Ituango','05647':'San Andrés de Cuerquia','05658':'San José de la Montaña',
+  '05664':'San Pedro de los Milagros','05686':'Santa Rosa de Osos','05819':'Toledo',
+  '05854':'Valdivia','05887':'Yarumal','05004':'Abriaquí','05044':'Anzá',
+  '05059':'Armenia','05113':'Buriticá','05125':'Caicedo','05138':'Cañasgordas',
+  '05234':'Dabeiba','05240':'Ebéjico','05284':'Frontino','05306':'Giraldo',
+  '05347':'Heliconia','05411':'Liborina','05501':'Olaya','05543':'Peque',
+  '05628':'Sabanalarga','05656':'San Jerónimo','05042':'Santa Fé de Antioquia',
+  '05761':'Sopetrán','05842':'Uramita','05002':'Abejorral','05021':'Alejandría',
+  '05055':'Argelia','05197':'Cocorná','05206':'Concepción','05148':'El Carmen de Viboral',
+  '05541':'El Peñol','05607':'El Retiro','05697':'El Santuario','05313':'Granada',
+  '05318':'Guarne','05321':'Guatapé','05376':'La Ceja','05400':'La Unión',
+  '05440':'Marinilla','05483':'Nariño','05615':'Rionegro','05649':'San Carlos',
+  '05652':'San Francisco','05660':'San Luis','05667':'San Rafael','05674':'San Vicente',
+  '05756':'Sonsón','05030':'Amagá','05034':'Andes','05036':'Angelópolis',
+  '05091':'Betania','05093':'Betulia','05145':'Caramanta','05101':'Ciudad Bolívar',
+  '05209':'Concordia','05282':'Fredonia','05353':'Hispania','05364':'Jardín',
+  '05368':'Jericó','05390':'La Pintada','05467':'Montebello','05576':'Pueblorrico',
+  '05642':'Salgar','05679':'Santa Bárbara','05789':'Támesis','05792':'Tarso',
+  '05809':'Titiribí','05847':'Urrao','05856':'Valparaíso','05861':'Venecia',
+  '05045':'Apartadó','05051':'Arboletes','05147':'Carepa','05172':'Chigorodó',
+  '05475':'Murindó','05480':'Mutatá','05490':'Necoclí','05659':'San Juan de Urabá',
+  '05665':'San Pedro de Urabá','05837':'Turbo','05873':'Vigía del Fuerte',
+  '05079':'Barbosa','05088':'Bello','05129':'Caldas','05212':'Copacabana',
+  '05266':'Envigado','05308':'Girardota','05360':'Itagüi','05380':'La Estrella',
+  '05001':'Medellín','05631':'Sabaneta'
+};
+
+function getNombre(r){
+  const ori = String(KEYS.origen ? r[KEYS.origen] : '').toLowerCase();
+  if(ori === 'nuevo'){
+    const n1 = (KEYS.nombre1 && r[KEYS.nombre1]) || '';
+    const n2 = (KEYS.nombre2 && r[KEYS.nombre2]) || '';
+    const a1 = (KEYS.apellido1 && r[KEYS.apellido1]) || '';
+    const a2 = (KEYS.apellido2 && r[KEYS.apellido2]) || '';
+    const full = [n1,n2,a1,a2].filter(Boolean).join(' ').trim();
+    return full || '—';
+  }
+  const nom = KEYS.nombre_siv ? r[KEYS.nombre_siv] : null;
+  return (nom && nom.trim()) ? nom.trim() : '—';
+}
+
+function getMunicipio(r){
+  const ori = String(r[KEYS.origen]||'').toLowerCase();
+  if(ori === 'nuevo'){
+    const codigo = KEYS.mun_new ? r[KEYS.mun_new] : null;
+    if(codigo && MUNICIPIO_MAP[codigo]) return MUNICIPIO_MAP[codigo];
+    return (KEYS.mun_siv && r[KEYS.mun_siv]) || '—';
+  }
+  return (KEYS.mun_siv && r[KEYS.mun_siv]) || '—';
+}
+
+function getSubregion(r){
+  const ori = String(r[KEYS.origen]||'').toLowerCase();
+  if(ori === 'nuevo'){
+    return (KEYS.sub_new && r[KEYS.sub_new]) || (KEYS.sub_siv && r[KEYS.sub_siv]) || '—';
+  }
+  return (KEYS.sub_siv && r[KEYS.sub_siv]) || '—';
+}
+
+function getSexo(r){
+  const ori = String(r[KEYS.origen]||'').toLowerCase();
+  let val;
+  if(ori === 'nuevo'){
+    // sexo_2 viene como "M"/"F", sexo viene como "1"/"2"
+    val = r[KEYS.sexo_new] || r[KEYS.sexo_siv];
+  } else {
+    // sexo viene como "1"(M) o "2"(F) para sivigila/arrullos
+    val = r[KEYS.sexo_siv];
+  }
+  return getSexLabel(val||'');
+}
+
+function enrichData(){
+  ALL_DATA.forEach(r=>{
+    r.__nombre    = getNombre(r);
+    r.__municipio = getMunicipio(r);
+    r.__subregion = getSubregion(r);
+    r.__sexLabel  = getSexo(r);
+    r.__edadGrupo = getEdadGrupo(KEYS.edad ? r[KEYS.edad] : null);
+    r.__tipoLabel = getTipoLabel(KEYS.tipo ? r[KEYS.tipo] : '');
+    r.__origen    = r[KEYS.origen] || '';
+  });
+}
+
+// ── FILTROS ─────────────────────────────────────────
+function applyFilter(dim, val){
+  if(FILTERS[dim]===val){ delete FILTERS[dim]; }
+  else { FILTERS[dim]=val; }
+  render();
+}
+
+function clearFilters(){
+  FILTERS={};
+  render();
+}
+
+function getFiltered(){
+  return ALL_DATA.filter(r=>{
+    for(const [dim,val] of Object.entries(FILTERS)){
+      const rv = getDimValue(r,dim);
+      if(String(rv)!==String(val)) return false;
+    }
+    return true;
+  });
+}
+
+function getDimValue(r,dim){
+  if(dim==='pt')   return KEYS.pt?r[KEYS.pt]:'';
+  if(dim==='te')   return KEYS.te?r[KEYS.te]:'';
+  if(dim==='sub')  return r.__subregion||'';
+  if(dim==='mun')  return r.__municipio||'';
+  if(dim==='edad') return r.__edadGrupo;
+  if(dim==='sexo') return r.__sexLabel||'';
+  if(dim==='sem')  return KEYS.sem?String(r[KEYS.sem]):'';
+  if(dim==='ori')  return r.__origen||'';
+  if(dim==='tipo') return r.__tipoLabel;
+  if(dim==='kpi')  return KEYS.pt?r[KEYS.pt]:'';
+  return '';
+}
+
+// ── RENDER PRINCIPAL ─────────────────────────────────
+function render(){
+  const data = getFiltered();
+  updateFilterBar();
+  renderKPIs(data);
+  renderTable(data);
+  renderCharts(data);
+}
+
+function updateFilterBar(){
+  const bar=document.getElementById('filterBar');
+  const tags=document.getElementById('filterTags');
+  const entries=Object.entries(FILTERS);
+  if(entries.length===0){bar.classList.remove('active');document.getElementById('btnClear').style.display='none';return;}
+  bar.classList.add('active');
+  document.getElementById('btnClear').style.display='inline-flex';
+  const labels={pt:'Peso/Talla',te:'Talla/Edad',sub:'Subregión',mun:'Municipio',
+    edad:'Edad',sexo:'Sexo',sem:'Semana',ori:'Origen',tipo:'Tipo',kpi:'Diagnóstico'};
+  tags.innerHTML=entries.map(([d,v])=>
+    `<span class="filter-tag">${labels[d]||d}: ${v} <i class="ti ti-x" onclick="removeFilter('${d}')"></i></span>`
+  ).join('');
+}
+
+function removeFilter(dim){ delete FILTERS[dim]; render(); }
+
+// ── KPIs ─────────────────────────────────────────────
+function renderKPIs(data){
+  const total=data.length||1;
+  const ptC=KEYS.pt?countBy(data,KEYS.pt):{};
+  const dntSev=(ptC['Desnutrición aguda severa']||0)+(ptC['DNT Severa']||0)+(ptC['DNT severa']||0);
+  const dntMod=(ptC['Desnutrición aguda moderada']||0)+(ptC['DNT moderada']||0);
+  const risk=(ptC['Riesgo de desnutrición aguda']||0)+(ptC['Riesgo DNT']||0);
+  const ok=ptC['Peso adecuado para la talla']||0;
+  const teC=KEYS.te?countBy(data,KEYS.te):{};
+  const ret=teC['Retraso en talla']||0;
+  const sob=(ptC['Riesgo de sobrepeso']||0)+(ptC['Sobrepeso']||0)+(ptC['Obesidad']||0);
+
+  const kpis=[
+    {label:'Total',value:data.length,color:'#1e40af',pct:null,dim:'',val:''},
+    {label:'DNT severa',value:dntSev,color:'#dc2626',pct:Math.round(dntSev/total*100),dim:'kpi',val:'Desnutrición aguda severa'},
+    {label:'DNT moderada',value:dntMod,color:'#d97706',pct:Math.round(dntMod/total*100),dim:'kpi',val:'Desnutrición aguda moderada'},
+    {label:'Riesgo DNT',value:risk,color:'#f59e0b',pct:Math.round(risk/total*100),dim:'kpi',val:'Riesgo de desnutrición aguda'},
+    {label:'Peso adecuado',value:ok,color:'#16a34a',pct:Math.round(ok/total*100),dim:'kpi',val:'Peso adecuado para la talla'},
+    {label:'Retraso talla',value:ret,color:'#7c3aed',pct:Math.round(ret/total*100),dim:'',val:''},
+    {label:'Sobrepeso/Ob.',value:sob,color:'#0891b2',pct:Math.round(sob/total*100),dim:'',val:''},
+  ];
+
+  document.getElementById('kpis').innerHTML=kpis.map(k=>{
+    const isActive = FILTERS['kpi']===k.val && k.val!=='';
+    return `<div class="kpi${isActive?' active':''}" onclick="${k.dim?`applyFilter('${k.dim}','${k.val}')`:''}" style="${k.dim?'':'cursor:default'}">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value" style="color:${k.color}">${k.value.toLocaleString()}</div>
+      ${k.pct!==null?`<div class="kpi-sub">${k.pct}% del total</div>`:''}
+      ${k.pct!==null?`<div class="kpi-bar" style="width:${k.pct}%;color:${k.color}"></div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ── TABLA CON PAGINACIÓN ──────────────────────────────
+const PAGE_SIZE = 50;
+let currentPage = 1;
+let currentTableData = [];
+
+function renderTable(data){
+  currentTableData = data;
+  currentPage = 1;
+  document.getElementById('tableSubtitle').textContent = Object.keys(FILTERS).length ? '— filtrado' : '— todos los registros';
+  renderTablePage();
+}
+
+function renderTablePage(){
+  const data = currentTableData;
+  const total = data.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  currentPage = Math.min(currentPage, totalPages);
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const end = Math.min(start + PAGE_SIZE, total);
+  const slice = data.slice(start, end);
+
+  document.getElementById('tableCount').textContent =
+    `Mostrando ${start+1}–${end} de ${total.toLocaleString()}`;
+
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = slice.map(r => {
+    const nombre = r.__nombre||'—';
+    const mun    = r.__municipio||'—';
+    const sub    = r.__subregion||'—';
+    const edad   = r.__edadGrupo||'—';
+    const sexo   = r.__sexLabel||'—';
+    const pt     = (KEYS.pt && r[KEYS.pt]) || '';
+    const te     = (KEYS.te && r[KEYS.te]) || '—';
+    const sem    = (KEYS.sem && r[KEYS.sem]) || '—';
+    const ori    = r.__origen || '—';
+    return `<tr>
+      <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis">${nombre}</td>
+      <td>${mun}</td><td>${sub}</td><td>${edad}</td><td>${sexo}</td>
+      <td>${getBadgePT(pt)}</td>
+      <td style="font-size:11px;color:#6b7280">${te}</td>
+      <td>S${sem}</td><td>${ori}</td>
+    </tr>`;
+  }).join('');
+
+  // Render pagination
+  const pg = document.getElementById('pagination');
+  if(totalPages <= 1){ pg.innerHTML=''; return; }
+
+  let html = '';
+  // Prev
+  html += `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+
+  // Page numbers with ellipsis
+  const pages = [];
+  if(totalPages <= 7){
+    for(let i=1;i<=totalPages;i++) pages.push(i);
+  } else {
+    pages.push(1);
+    if(currentPage > 3) pages.push('...');
+    for(let i=Math.max(2,currentPage-1); i<=Math.min(totalPages-1,currentPage+1); i++) pages.push(i);
+    if(currentPage < totalPages-2) pages.push('...');
+    pages.push(totalPages);
+  }
+
+  pages.forEach(p => {
+    if(p === '...'){
+      html += `<span style="font-size:12px;color:#9ca3af;padding:0 4px">…</span>`;
+    } else {
+      html += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+    }
+  });
+
+  // Next
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
+  html += `<span class="page-info">Página ${currentPage} de ${totalPages}</span>`;
+  pg.innerHTML = html;
+}
+
+function goPage(p){
+  const total = currentTableData.length;
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+  if(p < 1 || p > totalPages) return;
+  currentPage = p;
+  renderTablePage();
+  document.getElementById('dataTable').closest('.table-wrap').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ── CHARTS ───────────────────────────────────────────
+function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+
+const PT_COLORS={'Peso adecuado para la talla':'#16a34a','Riesgo de desnutrición aguda':'#f59e0b',
+  'Desnutrición aguda severa':'#dc2626','Desnutrición aguda moderada':'#d97706',
+  'Riesgo DNT':'#fbbf24','Dato desconocido':'#d1d5db','Riesgo de sobrepeso':'#0891b2',
+  'DNT moderada':'#ea580c','Obesidad':'#0e7490','Sobrepeso':'#06b6d4','DNT severa':'#b91c1c','DNT Severa':'#b91c1c'};
+const TE_COLORS={'Retraso en talla':'#dc2626','Riesgo de talla baja':'#f59e0b',
+  'Talla adecuada para la edad':'#16a34a','Dato desconocido':'#d1d5db','Riesgo de talla baja para la edad':'#fbbf24'};
+const PAL=['#2563eb','#0d9488','#d97706','#7c3aed','#dc2626','#0891b2','#16a34a','#f59e0b'];
+
+function donut(id,boxId,legId,entries,colorMap,dim){
+  destroyChart(id);
+  const labels=entries.map(e=>e[0]), data=entries.map(e=>e[1]);
+  const colors=labels.map((l,i)=>colorMap[l]||PAL[i%PAL.length]);
+  const total=data.reduce((a,b)=>a+b,0)||1;
+  const activeVal=FILTERS[dim];
+
+  document.getElementById(boxId).classList.toggle('has-filter',!!activeVal);
+  document.getElementById(legId).innerHTML=labels.map((l,i)=>{
+    const pct=Math.round(data[i]/total*100);
+    return `<span onclick="applyFilter('${dim}','${l.replace(/'/g,"\\'")}')">
+      <span class="leg-sq" style="background:${colors[i]};${activeVal===l?'outline:2px solid #1e40af;outline-offset:1px':''}"></span>${l} ${pct}%</span>`;
+  }).join('');
+
+  const borderW=labels.map(l=>activeVal===l?4:2);
+  const borderC=labels.map(l=>activeVal===l?'#1e40af':'#fff');
+
+  charts[id]=new Chart(document.getElementById(id),{
+    type:'doughnut',
+    data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:borderW,borderColor:borderC}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'52%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw} (${Math.round(ctx.raw/total*100)}%)`}}},
+      onClick:(_,els)=>{if(els.length){applyFilter(dim,labels[els[0].index]);}}}
+  });
+}
+
+function barH(id,boxId,labels,data,color,dim){
+  destroyChart(id);
+  const activeVal=FILTERS[dim];
+  document.getElementById(boxId).classList.toggle('has-filter',!!activeVal);
+  const colors=labels.map(l=>activeVal&&String(l)!==String(activeVal)?color+'55':color);
+
+  charts[id]=new Chart(document.getElementById(id),{
+    type:'bar',
+    data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.raw} registros`}}},
+      scales:{
+        x:{ticks:{color:'#6b7280',font:{size:10},maxRotation:30},grid:{display:false}},
+        y:{ticks:{color:'#6b7280',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}}
+      },
+      onClick:(_,els)=>{if(els.length){applyFilter(dim,String(labels[els[0].index]));}}}
+  });
+}
+
+function renderCharts(data){
+  // PT
+  const ptC=KEYS.pt?countBy(data,KEYS.pt):{};
+  donut('cPT','box-pt','leg-pt',topN(ptC,9),PT_COLORS,'pt');
+
+  // TE
+  const teC=KEYS.te?countBy(data,KEYS.te):{};
+  donut('cTE','box-te','leg-te',topN(teC,5),TE_COLORS,'te');
+
+  // Subregión
+  const subC=countBy(data,'__subregion');
+  const subE=topN(subC,10).filter(e=>e[0]&&e[0]!=='—');
+  barH('cSub','box-sub',subE.map(e=>e[0]),subE.map(e=>e[1]),'#2563eb','sub');
+
+  // Municipios
+  const munC=countBy(data,'__municipio');
+  const munTop=topN(munC,15).filter(e=>e[0]&&e[0]!=='—');
+  const maxMun=munTop[0]?munTop[0][1]:1;
+  const activeM=FILTERS['mun']||null;
+  document.getElementById('munList').innerHTML=munTop.map(([m,n])=>`
+    <div class="mun-row" onclick="applyFilter('mun','${m.replace(/'/g,"\\'")}')">
+      <span class="mun-name" style="${activeM===m?'color:#2563eb;font-weight:600':''}">${m}</span>
+      <div class="mun-bar-wrap"><div class="mun-bar" style="width:${Math.round(n/maxMun*100)}%;${activeM===m?'background:#1e40af':''}"></div></div>
+      <span class="mun-n">${n}</span>
+    </div>`).join('');
+
+  // Edad
+  const edadGrupos={'0-5m':0,'6-11m':0,'12-23m':0,'24-35m':0,'36-47m':0,'48-71m':0};
+  data.forEach(r=>{const g=r.__edadGrupo;if(g&&edadGrupos[g]!==undefined)edadGrupos[g]++;});
+  barH('cEdad','box-edad',Object.keys(edadGrupos),Object.values(edadGrupos),'#0d9488','edad');
+
+  // Sexo
+  const sexF=countBy(data,'__sexLabel');
+  const sexE=Object.entries(sexF).filter(e=>e[0]&&e[0]!=='—');
+  const sexColors=['#2563eb','#f97316'];
+  const activeSex=FILTERS['sexo'];
+  document.getElementById('box-sex').classList.toggle('has-filter',!!activeSex);
+  const legSex=document.getElementById('leg-sex');
+  const totSex=sexE.reduce((a,b)=>a+b[1],0)||1;
+  legSex.innerHTML=sexE.map((e,i)=>`<span onclick="applyFilter('sexo','${e[0]}')">
+    <span class="leg-sq" style="background:${sexColors[i%2]};${activeSex===e[0]?'outline:2px solid #1e40af;outline-offset:1px':''}"></span>
+    ${e[0]} ${Math.round(e[1]/totSex*100)}%</span>`).join('');
+  destroyChart('cSex');
+  charts['cSex']=new Chart(document.getElementById('cSex'),{
+    type:'doughnut',
+    data:{labels:sexE.map(e=>e[0]),datasets:[{data:sexE.map(e=>e[1]),
+      backgroundColor:sexE.map((_,i)=>sexColors[i%2]),
+      borderWidth:sexE.map(e=>activeSex===e[0]?4:2),
+      borderColor:sexE.map(e=>activeSex===e[0]?'#1e40af':'#fff')}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'52%',
+      plugins:{legend:{display:false}},
+      onClick:(_,els)=>{if(els.length){applyFilter('sexo',sexE[els[0].index][0]);}}}
+  });
+
+  // Semanas
+  const semC=KEYS.sem?countBy(data,KEYS.sem):{};
+  const semS=Object.entries(semC).filter(([k])=>!isNaN(k)&&k!=='').sort((a,b)=>Number(a[0])-Number(b[0]));
+  const activeSem=FILTERS['sem'];
+  document.getElementById('box-sem').classList.toggle('has-filter',!!activeSem);
+  destroyChart('cSem');
+  charts['cSem']=new Chart(document.getElementById('cSem'),{
+    type:'bar',
+    data:{labels:semS.map(e=>'S'+e[0]),datasets:[{
+      data:semS.map(e=>e[1]),
+      backgroundColor:semS.map(e=>activeSem&&String(e[0])!==String(activeSem)?'#7c3aed44':'#7c3aed'),
+      borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:'#6b7280',font:{size:9},maxTicksLimit:27},grid:{display:false}},
+        y:{ticks:{color:'#6b7280',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}}
+      },
+      onClick:(_,els)=>{if(els.length){applyFilter('sem',String(semS[els[0].index][0]));}}}
+  });
+
+  // Origen
+  const oriC=countBy(data,'__origen');
+  donut('cOri','box-ori','leg-ori',topN(oriC,6).filter(e=>e[0]),{}, 'ori');
+
+  // Tipo
+  const tipoF={};
+  data.forEach(r=>{const l=r.__tipoLabel;if(l){tipoF[l]=(tipoF[l]||0)+1;}});
+  donut('cTipo','box-tipo','leg-tipo',Object.entries(tipoF),{},'tipo');
+}
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
