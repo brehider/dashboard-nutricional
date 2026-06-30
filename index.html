@@ -10,22 +10,17 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a2e;min-height:100vh}
 .topbar{background:#05662F;padding:0 1.5rem;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;gap:8px}
-.topbar-brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:#fff;min-width:0;overflow:hidden}
-.topbar-logo{height:42px;background:#fff;border-radius:6px;padding:3px 6px;object-fit:contain;flex-shrink:0}
+.topbar-brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:#fff;min-width:0}
 .topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.topbar-meta{font-size:11px;color:rgba(255,255,255,0.75)}
+.topbar-meta{font-size:11px;color:rgba(255,255,255,.75)}
 .btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:5px 11px;border-radius:7px;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;transition:all .15s}
 .btn:hover{background:rgba(255,255,255,.2)}
-.btn-clear{background:#ef4444;border-color:#ef4444;color:#fff}
-.btn-clear:hover{background:#dc2626}
-.btn-filter-toggle{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);position:relative}
-.btn-filter-toggle.has-filters{background:#f59e0b;border-color:#d97706;color:#fff}
-.filter-badge{position:absolute;top:-5px;right:-5px;background:#ef4444;color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700;display:none}
+.btn-filter-toggle{position:relative}
+.btn-filter-toggle.has-filters{background:#f59e0b;border-color:#d97706}
+.filter-badge{position:absolute;top:-5px;right:-5px;background:#ef4444;color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;display:none;align-items:center;justify-content:center;font-weight:700}
 .filter-badge.show{display:flex}
-
-/* ── FILTER PANEL ── */
-.filter-panel{background:#fff;border-bottom:2px solid #05662F;position:sticky;top:54px;z-index:150;overflow:hidden;max-height:0;transition:max-height .3s ease, border-color .3s;box-shadow:0 4px 12px rgba(5,102,47,.12)}
-.filter-panel.open{max-height:600px;border-color:#05662F}
+.filter-panel{background:#fff;border-bottom:2px solid #05662F;position:sticky;top:54px;z-index:150;overflow:hidden;max-height:0;transition:max-height .3s ease;box-shadow:0 4px 12px rgba(5,102,47,.12)}
+.filter-panel.open{max-height:700px}
 .fp-inner{padding:.85rem 1.25rem 1rem}
 .fp-title{font-size:11px;font-weight:700;color:#05662F;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;display:flex;align-items:center;gap:6px}
 .fp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.6rem}
@@ -39,42 +34,35 @@ select.fp-control{cursor:pointer}
 .fp-search-wrap{position:relative}
 .fp-search-wrap i{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:14px;pointer-events:none}
 .fp-actions{display:flex;align-items:center;gap:8px;margin-top:.75rem;padding-top:.75rem;border-top:1px solid #f3f4f6;flex-wrap:wrap}
-.fp-apply{background:#05662F;color:#fff;border:none;padding:6px 16px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:background .15s}
+.fp-apply{background:#05662F;color:#fff;border:none;padding:6px 16px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
 .fp-apply:hover{background:#03441F}
-.fp-reset{background:#fff;color:#6b7280;border:1px solid #d1d5db;padding:6px 12px;border-radius:7px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s}
-.fp-reset:hover{border-color:#9ca3af;color:#374151}
+.fp-reset{background:#fff;color:#6b7280;border:1px solid #d1d5db;padding:6px 12px;border-radius:7px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.fp-results{font-size:11px;color:#9ca3af;margin-left:auto}
 .fp-active-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:.5rem}
 .fp-tag{background:#F0FDF4;border:1px solid #86EFAC;color:#05662F;font-size:11px;padding:2px 8px;border-radius:5px;display:flex;align-items:center;gap:4px}
 .fp-tag i{cursor:pointer;font-size:12px;opacity:.6}
-.fp-tag i:hover{opacity:1}
-.fp-results{font-size:11px;color:#9ca3af;margin-left:auto}
-
-/* ── ACTIVE FILTER BAR (below panel) ── */
 .active-bar{display:none;align-items:center;gap:8px;background:#F0FDF4;border-bottom:1px solid #86EFAC;padding:.5rem 1.25rem;font-size:12px;color:#05662F;flex-wrap:wrap}
 .active-bar.show{display:flex}
-.active-bar .fp-tag{font-size:11px}
-
-/* KPIs */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:1rem}
 .kpi{background:#fff;border-radius:10px;border:1px solid #e5e7eb;padding:.85rem 1rem;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
 .kpi:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.kpi.active{border-color:#05662F;background:#F0FDF4}
 .kpi-label{font-size:11px;color:#6b7280;font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
 .kpi-value{font-size:24px;font-weight:700;line-height:1}
 .kpi-sub{font-size:11px;color:#9ca3af;margin-top:3px}
-.kpi-bar{position:absolute;bottom:0;left:0;height:3px;background:currentColor;opacity:.3;transition:width .4s;max-width:100%}
-
-/* TABLE */
+.kpi-bar{position:absolute;bottom:0;left:0;height:3px;background:currentColor;opacity:.3;max-width:100%}
 .table-wrap{background:#fff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;margin-bottom:1rem}
-.table-header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-bottom:1px solid #f3f4f6}
+.table-header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border-bottom:1px solid #f3f4f6;flex-wrap:wrap;gap:6px}
 .table-title{font-size:13px;font-weight:600;color:#374151}
 .table-count{font-size:11px;color:#9ca3af}
-.table-scroll{overflow-x:auto;max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.table-scroll{overflow-x:auto;max-height:460px;overflow-y:auto}
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead{position:sticky;top:0;background:#f9fafb;z-index:1}
 th{padding:8px 10px;text-align:left;font-weight:600;color:#6b7280;border-bottom:1px solid #e5e7eb;white-space:nowrap}
 td{padding:7px 10px;border-bottom:1px solid #f3f4f6;color:#374151;white-space:nowrap}
-tr:hover td{background:#f9fafb}
+tr.data-row{cursor:pointer}
+tr.data-row:hover td{background:#f0fdf4}
+tr.data-row.expanded td{background:#f0fdf4;border-bottom:none}
+tr.expand-row td{padding:0}
 .badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:5px;font-weight:500}
 .b-sev{background:#fee2e2;color:#991b1b}
 .b-mod{background:#fef3c7;color:#92400e}
@@ -82,8 +70,47 @@ tr:hover td{background:#f9fafb}
 .b-ok{background:#dcfce7;color:#166534}
 .b-sob{background:#dbeafe;color:#1e40af}
 .b-nd{background:#f3f4f6;color:#6b7280}
-
-/* CHARTS */
+/* Pills historial */
+.hpills{display:flex;align-items:center;gap:2px}
+.hp{width:20px;height:20px;border-radius:50%;border:2px solid transparent;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0}
+.hp.sev{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+.hp.mod{background:#fef3c7;color:#92400e;border-color:#fde68a}
+.hp.risk{background:#fef9c3;color:#854d0e;border-color:#fef08a}
+.hp.ok{background:#dcfce7;color:#166534;border-color:#86efac}
+.hp.sob{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
+.hp.nd{background:#f3f4f6;color:#9ca3af;border-color:#e5e7eb}
+.hp.ghost{background:#f9fafb;color:#d1d5db;border:2px dashed #e5e7eb}
+.ha{font-size:8px;line-height:1;padding:0 1px;color:#9ca3af}
+.ha.m{color:#16a34a}.ha.p{color:#dc2626}
+.xchev{font-size:11px;color:#9ca3af;transition:transform .2s;display:inline-block}
+/* Expand panel */
+.xpanel{overflow:hidden;max-height:0;transition:max-height .28s ease;background:#f8fafc;border-bottom:1px solid #e5e7eb}
+.xpanel.open{max-height:500px}
+.xinner{padding:.6rem 1rem .75rem}
+.xtitle{font-size:10px;font-weight:700;color:#05662F;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;display:flex;align-items:center;gap:5px}
+/* Seg blocks */
+.seg-row{display:flex;align-items:flex-start;gap:5px;overflow-x:auto;padding-bottom:3px}
+.sblk{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:.5rem .65rem;min-width:155px;max-width:195px;flex-shrink:0}
+.sblk-h{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.snum{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0}
+.sblk-t{font-size:10px;font-weight:600;color:#374151}
+.sblk-f{font-size:9px;color:#9ca3af;margin-bottom:4px}
+.srow{display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px;gap:6px}
+.sk{color:#9ca3af}.sv{font-weight:600;color:#374151}
+.sbadge{display:block;font-size:9px;padding:2px 5px;border-radius:4px;font-weight:600;margin-top:4px;text-align:center}
+.sz{font-size:9px;color:#6b7280;margin-top:1px}
+.sz span{font-weight:600}
+.sblk.ghost{opacity:.38;border-style:dashed}
+.sconn{display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:22px;flex-shrink:0;gap:1px}
+.sline{width:16px;height:2px;background:#e5e7eb}
+.sarr{font-size:10px;color:#9ca3af}
+.sarr.m{color:#16a34a}.sarr.p{color:#dc2626}
+.rib{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:.2rem .5rem;border-radius:5px;margin-top:.4rem}
+.rm{background:#f0fdf4;color:#16a34a}
+.ri{background:#f9fafb;color:#6b7280}
+.rp{background:#fef2f2;color:#dc2626}
+.rn{background:#f9fafb;color:#9ca3af}
+/* Charts */
 .section-title{font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:.06em;margin:1rem 0 .5rem}
 .chart-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .chart-box{background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:.9rem 1rem;cursor:pointer;transition:border .15s}
@@ -97,10 +124,9 @@ tr:hover td{background:#f9fafb}
 .leg-sq{width:8px;height:8px;border-radius:2px;flex-shrink:0}
 .mun-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px}
 .mun-row{display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;padding:3px 0}
-.mun-row:hover .mun-name{color:#05662F}
 .mun-bar-wrap{flex:1;height:6px;background:#f3f4f6;border-radius:4px;overflow:hidden}
-.mun-bar{height:100%;border-radius:4px;background:#05662F;transition:width .4s}
-.mun-name{width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#6b7280;transition:color .15s}
+.mun-bar{height:100%;border-radius:4px;background:#0891b2}
+.mun-name{width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#6b7280}
 .mun-n{width:24px;text-align:right;font-weight:600;font-size:10px;color:#374151}
 .tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
 .tab{padding:7px 16px;font-size:13px;font-weight:500;border-radius:8px;cursor:pointer;border:1px solid #e5e7eb;background:#fff;color:#6b7280;transition:all .15s}
@@ -113,12 +139,10 @@ tr:hover td{background:#f9fafb}
 .page-btn.active{background:#05662F;color:#fff;border-color:#05662F}
 .page-btn:disabled{opacity:.4;cursor:default}
 .page-info{font-size:11px;color:#9ca3af;margin-left:auto}
-
 #loadingScreen{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 54px)}
 .spinner-wrap{text-align:center}
 .spinner{width:44px;height:44px;border:3px solid #e5e7eb;border-top-color:#05662F;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .loading-text{font-size:14px;color:#374151;font-weight:500}
 .loading-sub{font-size:12px;color:#9ca3af;margin-top:5px}
 #errorScreen{display:none;align-items:center;justify-content:center;min-height:calc(100vh - 54px);padding:2rem;text-align:center}
@@ -128,875 +152,891 @@ tr:hover td{background:#f9fafb}
 .err-msg{font-size:13px;color:#6b7280}
 .btn-retry{margin-top:1rem;display:inline-flex;align-items:center;gap:5px;font-size:13px;padding:7px 14px;border-radius:8px;cursor:pointer;border:1px solid #d1d5db;background:#fff;color:#374151}
 #dashScreen{display:none;padding:1rem 1.25rem 2rem}
-
-/* RESPONSIVE */
-@media(max-width:768px){
-  .topbar{padding:0 1rem;height:52px}
-  .topbar-logo{height:30px;padding:2px 4px}
-  .topbar-brand > div{display:none}
-  #btnExport span,#btnRefresh span{display:none}
-  .btn{padding:5px 8px}
-  #dashScreen{padding:.75rem}
-  .kpi-grid{grid-template-columns:repeat(3,1fr);gap:6px}
-  .chart-row{grid-template-columns:1fr 1fr;gap:8px}
-  .fp-grid{grid-template-columns:repeat(2,1fr)}
-  .mun-list{grid-template-columns:1fr 1fr}
-}
-@media(max-width:480px){
-  .topbar{height:48px;padding:0 .75rem}
-  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:5px}
-  .kpi-value{font-size:18px}
-  .kpi-sub{display:none}
-  .chart-row{grid-template-columns:1fr;gap:8px}
-  .chart-box.full{grid-column:1}
-  .fp-grid{grid-template-columns:1fr}
-  .fp-search{grid-column:1}
-  .mun-list{grid-template-columns:1fr}
-  .tabs{flex-wrap:wrap}
-  .tab{flex:1;min-width:calc(50% - 4px);justify-content:center;font-size:11px;padding:5px 6px}
-  .tab-count{display:none}
-  #btnExport{display:none!important}
-}
+@media(max-width:768px){.topbar{padding:0 1rem}#dashScreen{padding:.75rem}.kpi-grid{grid-template-columns:repeat(3,1fr);gap:6px}.chart-row{grid-template-columns:1fr 1fr;gap:8px}.fp-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr);gap:5px}.kpi-value{font-size:18px}.chart-row{grid-template-columns:1fr}.chart-box.full{grid-column:1}.fp-grid{grid-template-columns:1fr}.tabs{flex-wrap:wrap}.tab{flex:1;min-width:calc(50% - 4px);justify-content:center;font-size:11px;padding:5px 6px}.tab-count{display:none}#btnExport{display:none!important}}
 </style>
 </head>
 <body>
-
-<!-- TOPBAR -->
 <div class="topbar">
   <div class="topbar-brand">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARwAAABuCAYAAAD1aayeAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEyWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDI1LTA0LTIxPC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjkzMTlmNmRkLTdjMmMtNDk2OS05YjE2LWRmYmQ4ZDZkNjhiZjwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5EaXNlw7FvIHNpbiB0w610dWxvIC0gMTwvcmRmOmxpPgogICA8L3JkZjpBbHQ+CiAgPC9kYzp0aXRsZT4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3Jp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" alt="Gobernación de Antioquia" class="topbar-logo">    <div style="border-left:1px solid rgba(255,255,255,.35);padding-left:10px;margin-left:2px;line-height:1.3">
+    <div style="border-left:1px solid rgba(255,255,255,.35);padding-left:10px;margin-left:2px;line-height:1.3">
       <div style="font-size:13px;font-weight:700">Seguimiento Nutricional</div>
       <div style="font-size:10px;font-weight:400;opacity:.8">DSAN · Gobernación de Antioquia</div>
     </div>
   </div>
   <div class="topbar-right">
     <span class="topbar-meta" id="topMeta"></span>
-    <button class="btn btn-filter-toggle" id="btnFilter" onclick="toggleFilterPanel()">
-      <i class="ti ti-adjustments-horizontal"></i><span> Filtros</span>
-      <span class="filter-badge" id="filterBadge">0</span>
-    </button>
+    <button class="btn btn-filter-toggle" id="btnFilter" onclick="toggleFP()"><i class="ti ti-adjustments-horizontal"></i><span> Filtros</span><span class="filter-badge" id="filterBadge">0</span></button>
     <button class="btn" id="btnExport" style="display:none;background:#16a34a;border-color:#16a34a" onclick="handleExport()"><i class="ti ti-file-spreadsheet"></i><span> Excel</span></button>
-    <button class="btn" id="btnOpenTab" style="display:none;background:#0891b2;border-color:#0891b2" onclick="openInNewTab()" title="Abrir en nueva pestaña para descargar Excel"><i class="ti ti-external-link"></i><span> Abrir</span></button>
+    <button class="btn" id="btnOpenTab" style="display:none;background:#0891b2;border-color:#0891b2" onclick="openInNewTab()"><i class="ti ti-external-link"></i><span> Abrir</span></button>
     <button class="btn" id="btnRefresh" style="display:none" onclick="reload()"><i class="ti ti-refresh"><span> Actualizar</span></i></button>
   </div>
 </div>
 
-<!-- FILTER PANEL -->
 <div class="filter-panel" id="filterPanel">
   <div class="fp-inner">
-    <div class="fp-title"><i class="ti ti-filter"></i> Filtros del seguimiento nutricional</div>
+    <div class="fp-title"><i class="ti ti-filter"></i> Filtros</div>
     <div class="fp-grid">
-      <!-- Búsqueda -->
-      <div class="fp-group fp-search">
-        <label class="fp-label">Buscar por nombre o documento</label>
-        <div class="fp-search-wrap">
-          <i class="ti ti-search"></i>
-          <input class="fp-control" id="fpSearch" type="text" placeholder="Nombre, apellido o número de documento…" oninput="onFpChange()"/>
-        </div>
-      </div>
-      <!-- Subregión -->
-      <div class="fp-group">
-        <label class="fp-label">Subregión</label>
-        <select class="fp-control" id="fpSub" onchange="onFpChange()">
-          <option value="">Todas</option>
-        </select>
-      </div>
-      <!-- Municipio -->
-      <div class="fp-group">
-        <label class="fp-label">Municipio</label>
-        <select class="fp-control" id="fpMun" onchange="onFpChange()">
-          <option value="">Todos</option>
-        </select>
-      </div>
-      <!-- Semana -->
-      <div class="fp-group">
-        <label class="fp-label">Semana epidemiológica</label>
-        <select class="fp-control" id="fpSem" onchange="onFpChange()">
-          <option value="">Todas</option>
-        </select>
-      </div>
-      <!-- Tipo participante -->
-      <div class="fp-group">
-        <label class="fp-label">Tipo participante</label>
-        <select class="fp-control" id="fpTipo" onchange="onFpChange()">
-          <option value="">Todos</option>
-          <option value="1">&lt; 6 meses</option>
-          <option value="2">6–71 meses</option>
-          <option value="3">Gestante</option>
-        </select>
-      </div>
-      <!-- Sexo -->
-      <div class="fp-group">
-        <label class="fp-label">Sexo</label>
-        <select class="fp-control" id="fpSexo" onchange="onFpChange()">
-          <option value="">Todos</option>
-          <option value="Masculino">Masculino</option>
-          <option value="Femenino">Femenino</option>
-        </select>
-      </div>
-      <!-- Grupo edad -->
-      <div class="fp-group">
-        <label class="fp-label">Grupo de edad</label>
-        <select class="fp-control" id="fpEdad" onchange="onFpChange()">
-          <option value="">Todos</option>
-          <option value="0-5m">0–5 meses</option>
-          <option value="6-11m">6–11 meses</option>
-          <option value="12-23m">12–23 meses</option>
-          <option value="24-35m">24–35 meses</option>
-          <option value="36-47m">36–47 meses</option>
-          <option value="48-71m">48–71 meses</option>
-        </select>
-      </div>
-      <!-- Clasificación P/T -->
-      <div class="fp-group">
-        <label class="fp-label">Clasificación Peso / Talla</label>
-        <select class="fp-control" id="fpPT" onchange="onFpChange()">
-          <option value="">Todas</option>
-        </select>
-      </div>
-      <!-- Clasificación T/E -->
-      <div class="fp-group">
-        <label class="fp-label">Clasificación Talla / Edad</label>
-        <select class="fp-control" id="fpTE" onchange="onFpChange()">
-          <option value="">Todas</option>
-        </select>
-      </div>
-      <!-- Origen -->
-      <div class="fp-group">
-        <label class="fp-label">Origen del registro</label>
-        <select class="fp-control" id="fpOrigen" onchange="onFpChange()">
-          <option value="">Todos</option>
-        </select>
-      </div>
-      <!-- EPS -->
-      <div class="fp-group">
-        <label class="fp-label">EPS</label>
-        <select class="fp-control" id="fpEps" onchange="onFpChange()">
-          <option value="">Todas</option>
-        </select>
-      </div>
-      <!-- Funcionario -->
-      <div class="fp-group">
-        <label class="fp-label">Funcionario</label>
-        <select class="fp-control" id="fpFunc" onchange="onFpChange()">
-          <option value="">Todos</option>
-        </select>
-      </div>
+      <div class="fp-group fp-search"><label class="fp-label">Buscar nombre o documento</label><div class="fp-search-wrap"><i class="ti ti-search"></i><input class="fp-control" id="fpSearch" type="text" placeholder="Nombre o documento…" oninput="onFpChange()"/></div></div>
+      <div class="fp-group"><label class="fp-label">Subregión</label><select class="fp-control" id="fpSub" onchange="onFpChange()"><option value="">Todas</option></select></div>
+      <div class="fp-group"><label class="fp-label">Municipio</label><select class="fp-control" id="fpMun" onchange="onFpChange()"><option value="">Todos</option></select></div>
+      <div class="fp-group"><label class="fp-label">Semana</label><select class="fp-control" id="fpSem" onchange="onFpChange()"><option value="">Todas</option></select></div>
+      <div class="fp-group"><label class="fp-label">Tipo participante</label><select class="fp-control" id="fpTipo" onchange="onFpChange()"><option value="">Todos</option><option value="1">&lt; 6 meses</option><option value="2">6–71 meses</option><option value="3">Gestante</option></select></div>
+      <div class="fp-group"><label class="fp-label">Sexo</label><select class="fp-control" id="fpSexo" onchange="onFpChange()"><option value="">Todos</option><option value="Masculino">Masculino</option><option value="Femenino">Femenino</option></select></div>
+      <div class="fp-group"><label class="fp-label">Grupo edad</label><select class="fp-control" id="fpEdad" onchange="onFpChange()"><option value="">Todos</option><option value="0-5m">0–5 m</option><option value="6-11m">6–11 m</option><option value="12-23m">12–23 m</option><option value="24-35m">24–35 m</option><option value="36-47m">36–47 m</option><option value="48-71m">48–71 m</option></select></div>
+      <div class="fp-group"><label class="fp-label">Clasif. P/T</label><select class="fp-control" id="fpPT" onchange="onFpChange()"><option value="">Todas</option></select></div>
+      <div class="fp-group"><label class="fp-label">Clasif. T/E</label><select class="fp-control" id="fpTE" onchange="onFpChange()"><option value="">Todas</option></select></div>
+      <div class="fp-group"><label class="fp-label">Origen</label><select class="fp-control" id="fpOrigen" onchange="onFpChange()"><option value="">Todos</option></select></div>
+      <div class="fp-group"><label class="fp-label">EPS</label><select class="fp-control" id="fpEps" onchange="onFpChange()"><option value="">Todas</option></select></div>
+      <div class="fp-group"><label class="fp-label">Funcionario</label><select class="fp-control" id="fpFunc" onchange="onFpChange()"><option value="">Todos</option></select></div>
+      <div class="fp-group"><label class="fp-label">Evolución Seg 1→2</label><select class="fp-control" id="fpEvol" onchange="onFpChange()"><option value="">Cualquiera</option><option value="mejor">Mejoró</option><option value="igual">Sin cambio</option><option value="peor">Empeoró</option><option value="seg3">Con 3 seguimientos</option></select></div>
+      <div class="fp-group"><label class="fp-label">Fecha val. desde</label><input class="fp-control" type="date" id="fpFechaDesde" onchange="onFpChange()"/></div>
+      <div class="fp-group"><label class="fp-label">Fecha val. hasta</label><input class="fp-control" type="date" id="fpFechaHasta" onchange="onFpChange()"/></div>
     </div>
     <div class="fp-actions">
-      <button class="fp-apply" onclick="applyPanelFilters()"><i class="ti ti-check"></i> Aplicar filtros</button>
-      <button class="fp-reset" onclick="resetPanelFilters()"><i class="ti ti-x"></i> Limpiar</button>
+      <button class="fp-apply" onclick="applyPF()"><i class="ti ti-check"></i> Aplicar</button>
+      <button class="fp-reset" onclick="resetPF()"><i class="ti ti-x"></i> Limpiar</button>
       <span class="fp-results" id="fpResults"></span>
     </div>
     <div class="fp-active-tags" id="fpActiveTags"></div>
   </div>
 </div>
-
-<!-- ACTIVE BAR -->
 <div class="active-bar" id="activeBar">
   <i class="ti ti-filter" style="font-size:13px"></i>
   <span style="font-weight:600;font-size:11px">Filtros activos:</span>
   <div id="activeBarTags" style="display:flex;flex-wrap:wrap;gap:4px"></div>
-  <button class="fp-reset" style="margin-left:auto;font-size:11px;padding:2px 8px" onclick="resetPanelFilters()"><i class="ti ti-x"></i> Limpiar</button>
+  <button class="fp-reset" style="margin-left:auto;font-size:11px;padding:2px 8px" onclick="resetPF()"><i class="ti ti-x"></i> Limpiar</button>
 </div>
 
-<div id="loadingScreen">
-  <div class="spinner-wrap">
-    <div class="spinner"></div>
-    <div class="loading-text" id="loadingMsg">Conectando con ArcGIS...</div>
-    <div class="loading-sub" id="loadingSub"></div>
-  </div>
-</div>
-<div id="errorScreen">
-  <div class="err-card">
-    <i class="ti ti-wifi-off"></i>
-    <div class="err-title">Error de conexión</div>
-    <div class="err-msg" id="errMsg"></div>
-    <button class="btn-retry" onclick="init()"><i class="ti ti-refresh"></i> Reintentar</button>
-  </div>
-</div>
+<div id="loadingScreen"><div class="spinner-wrap"><div class="spinner"></div><div class="loading-text" id="loadingMsg">Conectando con ArcGIS...</div><div class="loading-sub" id="loadingSub"></div></div></div>
+<div id="errorScreen"><div class="err-card"><i class="ti ti-wifi-off"></i><div class="err-title">Error de conexión</div><div class="err-msg" id="errMsg"></div><button class="btn-retry" onclick="init()"><i class="ti ti-refresh"></i> Reintentar</button></div></div>
 
 <div id="dashScreen">
   <div class="tabs" id="tipoTabs"></div>
   <div class="kpi-grid" id="kpis"></div>
-
-  <div class="section-title">Tabla de registros <span style="font-weight:400;color:#9ca3af" id="tableSubtitle"></span></div>
+  <div class="section-title">Tabla de registros <span style="font-weight:400;color:#9ca3af" id="tableSubtitle"></span><span style="font-size:10px;color:#9ca3af;margin-left:8px"><i class="ti ti-click" style="font-size:11px"></i> Clic en fila → historial</span></div>
   <div class="table-wrap">
-    <div class="table-header">
-      <div class="table-title">Niños, niñas y gestantes</div>
-      <div class="table-count" id="tableCount"></div>
-    </div>
-    <div class="table-scroll"><table id="dataTable"><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>
+    <div class="table-header"><div class="table-title">Niños, niñas y gestantes</div><div class="table-count" id="tableCount"></div></div>
+    <div class="table-scroll"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>
     <div class="pagination" id="pagination"></div>
   </div>
-
   <div class="section-title">Diagnóstico nutricional</div>
   <div class="chart-row">
-    <div class="chart-box" id="box-pt"><div class="chart-title">Clasificación peso / talla <span class="chart-hint">clic para filtrar</span></div><div class="leg" id="leg-pt"></div><div style="position:relative;height:210px"><canvas id="cPT"></canvas></div></div>
-    <div class="chart-box" id="box-te"><div class="chart-title">Clasificación talla / edad <span class="chart-hint">clic para filtrar</span></div><div class="leg" id="leg-te"></div><div style="position:relative;height:210px"><canvas id="cTE"></canvas></div></div>
+    <div class="chart-box" id="box-pt"><div class="chart-title">Peso / talla <span class="chart-hint">clic para filtrar</span></div><div class="leg" id="leg-pt"></div><div style="position:relative;height:210px"><canvas id="cPT"></canvas></div></div>
+    <div class="chart-box" id="box-te"><div class="chart-title">Talla / edad <span class="chart-hint">clic para filtrar</span></div><div class="leg" id="leg-te"></div><div style="position:relative;height:210px"><canvas id="cTE"></canvas></div></div>
   </div>
-
   <div class="section-title">Distribución geográfica</div>
   <div class="chart-row">
-    <div class="chart-box full" id="box-sub"><div class="chart-title">Registros por subregión <span class="chart-hint">clic para filtrar</span></div><div style="position:relative;height:185px"><canvas id="cSub"></canvas></div></div>
+    <div class="chart-box full" id="box-sub"><div class="chart-title">Por subregión <span class="chart-hint">clic para filtrar</span></div><div style="position:relative;height:185px"><canvas id="cSub"></canvas></div></div>
   </div>
-
   <div class="section-title">Top municipios <span style="font-weight:400;color:#9ca3af">(clic para filtrar)</span></div>
   <div class="mun-list" id="munList"></div>
-
   <div class="section-title">Demografía</div>
   <div class="chart-row">
     <div class="chart-box" id="box-edad"><div class="chart-title">Grupos de edad <span class="chart-hint">clic para filtrar</span></div><div style="position:relative;height:195px"><canvas id="cEdad"></canvas></div></div>
     <div class="chart-box" id="box-sex"><div class="chart-title">Sexo <span class="chart-hint">clic para filtrar</span></div><div class="leg" id="leg-sex"></div><div style="position:relative;height:195px"><canvas id="cSex"></canvas></div></div>
   </div>
-
   <div class="section-title">Cobertura semanal</div>
   <div class="chart-row">
-    <div class="chart-box full" id="box-sem"><div class="chart-title">Registros por semana epidemiológica <span class="chart-hint">clic para filtrar</span></div><div style="position:relative;height:175px"><canvas id="cSem"></canvas></div></div>
+    <div class="chart-box full" id="box-sem"><div class="chart-title">Por semana epidemiológica <span class="chart-hint">clic para filtrar</span></div><div style="position:relative;height:175px"><canvas id="cSem"></canvas></div></div>
   </div>
-
   <div class="section-title">Origen y tipo</div>
   <div class="chart-row">
-    <div class="chart-box" id="box-ori"><div class="chart-title">Origen del registro <span class="chart-hint">clic para filtrar</span></div><div class="leg" id="leg-ori"></div><div style="position:relative;height:195px"><canvas id="cOri"></canvas></div></div>
-    <div class="chart-box" id="box-tipo"><div class="chart-title">Tipo de participante <span class="chart-hint">clic para filtrar</span></div><div class="leg" id="leg-tipo"></div><div style="position:relative;height:195px"><canvas id="cTipo"></canvas></div></div>
+    <div class="chart-box" id="box-ori"><div class="chart-title">Origen <span class="chart-hint">clic para filtrar</span></div><div class="leg" id="leg-ori"></div><div style="position:relative;height:195px"><canvas id="cOri"></canvas></div></div>
+    <div class="chart-box" id="box-tipo"><div class="chart-title">Tipo participante <span class="chart-hint">clic para filtrar</span></div><div class="leg" id="leg-tipo"></div><div style="position:relative;height:195px"><canvas id="cTipo"></canvas></div></div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-const SVC_URL="https://services5.arcgis.com/K90UQIB09TmTjUL8/arcgis/rest/services/service_1a7781c499504e5182f97482a10dc366/FeatureServer/0";
-let ALL_DATA=[],charts={},KEYS={};
+const SVC="https://services5.arcgis.com/K90UQIB09TmTjUL8/arcgis/rest/services/service_1a7781c499504e5182f97482a10dc366/FeatureServer/0";
+let ALL=[],charts={},K={},BY_DOC={},FIELD_MAP={};
+let fpOpen=false;
+let PF={search:'',sub:'',mun:'',sem:'',tipo:'',sexo:'',edad:'',pt:'',te:'',origen:'',eps:'',func:'',evol:'',fechaDesde:'',fechaHasta:''};
+let CF={},TF='';
 
-// ── PANEL STATE ─────────────────────────────────────
-let panelOpen=false;
-// Panel filter values (set by Apply)
-let PF={search:'',sub:'',mun:'',sem:'',tipo:'',sexo:'',edad:'',pt:'',te:'',origen:'',eps:'',func:''};
-// Chart click filters (cross-filter on top of PF)
-let CF={}; // {dim:val}
-// Tab filter
-let TIPO_FILTER='';
+// ── UTILS ─────────────────────────────────────────────
+function show(id){['loadingScreen','errorScreen','dashScreen'].forEach(s=>{const el=document.getElementById(s);el.style.display=s===id?(s==='dashScreen'?'block':'flex'):'none';})}
+function ld(m,s=''){document.getElementById('loadingMsg').textContent=m;document.getElementById('loadingSub').textContent=s;}
+function cBy(arr,k){const c={};arr.forEach(r=>{const v=r[k];if(v!=null&&String(v).trim()){c[v]=(c[v]||0)+1;}});return c;}
+function topN(o,n){return Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,n);}
+function fd(v){if(!v)return'—';const d=new Date(typeof v==='number'?v:v);return isNaN(d)?'—':d.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'});}
+function fn(v,d=1){const n=parseFloat(v);return isNaN(n)?null:n.toFixed(d);}
+function fz(v){if(v==null||v===''||String(v).includes('dato')||String(v).includes('dato'))return null;const n=parseFloat(v);return isNaN(n)?null:n.toFixed(2);}
+function cs(v){if(!v)return null;const s=String(v).trim();if(!s||s==='Dato desconocido'||s==='Sin dato'||s==='None'||s==='null')return null;return s;}
 
-function toggleFilterPanel(){
-  panelOpen=!panelOpen;
-  document.getElementById('filterPanel').classList.toggle('open',panelOpen);
-  document.getElementById('btnFilter').classList.toggle('has-filters', countActiveFilters()>0);
-  if(panelOpen) updateLiveCount();
+const MUNMAP={'05120':'Cáceres','05154':'Caucasia','05250':'El Bagre','05495':'Nechí','05790':'Tarazá','05895':'Zaragoza','05579':'Puerto Berrío','05585':'Puerto Nare','05591':'Puerto Triunfo','05893':'Yondó','05142':'Caracolí','05425':'Maceo','05031':'Amalfi','05040':'Anorí','05190':'Cisneros','05604':'Remedios','05670':'San Roque','05690':'Santo Domingo','05736':'Segovia','05858':'Vegachí','05885':'Yalí','05890':'Yolombó','05038':'Angostura','05086':'Belmira','05107':'Briceño','05134':'Campamento','05150':'Carolina del Príncipe','05237':'Don Matías','05264':'Entrerríos','05310':'Gómez Plata','05315':'Guadalupe','05361':'Ituango','05647':'San Andrés de Cuerquia','05658':'San José de la Montaña','05664':'San Pedro de los Milagros','05686':'Santa Rosa de Osos','05819':'Toledo','05854':'Valdivia','05887':'Yarumal','05004':'Abriaquí','05044':'Anzá','05059':'Armenia','05113':'Buriticá','05125':'Caicedo','05138':'Cañasgordas','05234':'Dabeiba','05240':'Ebéjico','05284':'Frontino','05306':'Giraldo','05347':'Heliconia','05411':'Liborina','05501':'Olaya','05543':'Peque','05628':'Sabanalarga','05656':'San Jerónimo','05042':'Santa Fé de Antioquia','05761':'Sopetrán','05842':'Uramita','05002':'Abejorral','05021':'Alejandría','05055':'Argelia','05197':'Cocorná','05206':'Concepción','05148':'El Carmen de Viboral','05541':'El Peñol','05607':'El Retiro','05697':'El Santuario','05313':'Granada','05318':'Guarne','05321':'Guatapé','05376':'La Ceja','05400':'La Unión','05440':'Marinilla','05483':'Nariño','05615':'Rionegro','05649':'San Carlos','05652':'San Francisco','05660':'San Luis','05667':'San Rafael','05674':'San Vicente','05756':'Sonsón','05030':'Amagá','05034':'Andes','05036':'Angelópolis','05091':'Betania','05093':'Betulia','05145':'Caramanta','05101':'Ciudad Bolívar','05209':'Concordia','05282':'Fredonia','05353':'Hispania','05364':'Jardín','05368':'Jericó','05390':'La Pintada','05467':'Montebello','05576':'Pueblorrico','05642':'Salgar','05679':'Santa Bárbara','05789':'Támesis','05792':'Tarso','05809':'Titiribí','05847':'Urrao','05856':'Valparaíso','05861':'Venecia','05045':'Apartadó','05051':'Arboletes','05147':'Carepa','05172':'Chigorodó','05475':'Murindó','05480':'Mutatá','05490':'Necoclí','05659':'San Juan de Urabá','05665':'San Pedro de Urabá','05837':'Turbo','05873':'Vigía del Fuerte','05079':'Barbosa','05088':'Bello','05129':'Caldas','05212':'Copacabana','05266':'Envigado','05308':'Girardota','05360':'Itagüi','05380':'La Estrella','05001':'Medellín','05631':'Sabaneta'};
+
+function toTitle(s){
+  if(!s)return'';
+  // Preposiciones y artículos que van en minúscula
+  const lower=new Set(['de','del','la','las','los','el','y','e','i','o','u','van','von']);
+  return s.toLowerCase().replace(/\S+/g,(w,i)=>lower.has(w)&&i>0?w:w.charAt(0).toUpperCase()+w.slice(1));
 }
+function getNom(r){const ori=String(r[K.origen]||'').toLowerCase();if(ori==='nuevo'){const n=[r[K.nom1],r[K.nom2],r[K.ape1],r[K.ape2]].filter(Boolean).join(' ').trim();return toTitle(n)||'—';}return toTitle((r[K.nom_siv]||'').trim())||'—';}
+function getMun(r){const ori=String(r[K.origen]||'').toLowerCase();if(ori==='nuevo'){const c=r[K.mun_new];if(c&&MUNMAP[c])return MUNMAP[c];}return r[K.mun_siv]||'—';}
+function getSub(r){const ori=String(r[K.origen]||'').toLowerCase();if(ori==='nuevo')return r[K.sub_new]||r[K.sub_siv]||'—';return r[K.sub_siv]||'—';}
+function getSex(r){const ori=String(r[K.origen]||'').toLowerCase();const v=ori==='nuevo'?r[K.sex_new]||r[K.sex_siv]:r[K.sex_siv];const m={'1':'Masculino','2':'Femenino','M':'Masculino','F':'Femenino'};return m[String(v||'')]||String(v||'');}
+function getPT(r){if(r[K.tipo]==='3')return cs(r[K.clas_imc_gest])||'—';const v=cs(r[K.clas_pt]);if(v)return v;return cs(r[K.clas_pt_ant])||'';}
+function getTE(r){if(r[K.tipo]==='3'){const sg=r[K.sem_gest];return sg?`${sg} sem.`:'—';}const v=cs(r[K.clas_te]);if(v)return v;return cs(r[K.clas_te_ant])||'—';}
+function getEG(e){const n=parseInt(e||0);if(n<=5)return'0-5m';if(n<=11)return'6-11m';if(n<=23)return'12-23m';if(n<=35)return'24-35m';if(n<=47)return'36-47m';return'48-71m';}
 
-function countActiveFilters(){
-  return Object.values(PF).filter(v=>v&&v!=='').length + Object.keys(CF).length;
-}
+// ── DETECCIÓN DE CAMPOS POR ALIAS EXACTO ────────────
+// Mapa verificado contra Excel:
+// SEG1 anterior: col68=Fecha val.anterior, col69=Edad val.anterior,
+//   col70=Peso anterior Kg, col71=Estatura anterior cms,
+//   col72=Z-Peso/Talla[ANT], col75=Clasificación Peso/Talla[ANT],
+//   col76=Z-Talla/Edad[ANT], col79=Clasificación Talla/Edad[ANT]
+//   col80=Z-Peso/Edad anterior → SIEMPRE VACÍO, no se usa
+// SEG2/3 actual: col82=Peso Kg, col83=Estatura cms, col86=PB, col88=PC,
+//   col104=Z-Peso/Talla[ACT], col105=Clasificación Peso/Talla Actual,
+//   col106=Z-Talla/Edad[ACT], col107=Z-Peso/Edad[ACT],
+//   col108=Clasificación Peso/Edad Actual, col177=Clasificación Talla/Edad actual
+//   col109=Z-Talla/Edad IMC, col110=Clasif Talla/Edad IMC (escolares)
+//   col111=Z-IMC/E, col112=Clasif IMC/E (escolares)
+//   col114=IMC Gestante, col115=Clasif IMC/Edad gestacional (tipo3)
 
-function updateFilterBadge(){
-  const n=countActiveFilters();
-  const badge=document.getElementById('filterBadge');
-  badge.textContent=n;
-  badge.classList.toggle('show',n>0);
-  document.getElementById('btnFilter').classList.toggle('has-filters',n>0);
-}
-
-// ── LIVE COUNT while editing panel ─────────────────
-function onFpChange(){
-  updateLiveCount();
-}
-
-function updateLiveCount(){
-  const preview=getFiltered(getPanelValuesFromInputs());
-  document.getElementById('fpResults').textContent=`${preview.length.toLocaleString()} registros`;
-  renderActiveTags(getPanelValuesFromInputs());
-}
-
-function getPanelValuesFromInputs(){
+function autoDetectFields(sample, fields) {
+  const byAlias = {}, byName = {};
+  fields.forEach(f => { if(f.alias)byAlias[f.alias.trim()]=f.name; byName[f.name]=f.name; });
+  const ea = a => byAlias[a] || null;
+  const pn = (...ps) => { for(const p of ps){const f=Object.keys(byName).find(n=>n.toLowerCase().includes(p.toLowerCase()));if(f)return f;}return null; };
+  // Para aliases duplicados (mismo texto, distinto fieldname): tomar el más corto=anterior, más largo=actual
+  const shorter = alias => { const m=fields.filter(f=>f.alias&&f.alias.trim()===alias); if(!m.length)return null; return m.sort((a,b)=>a.name.length-b.name.length)[0].name; };
+  const longer  = alias => { const m=fields.filter(f=>f.alias&&f.alias.trim()===alias); if(!m.length)return null; return m.sort((a,b)=>b.name.length-a.name.length)[0].name; };
   return {
-    search:  document.getElementById('fpSearch').value.trim().toLowerCase(),
-    sub:     document.getElementById('fpSub').value,
-    mun:     document.getElementById('fpMun').value,
-    sem:     document.getElementById('fpSem').value,
-    tipo:    document.getElementById('fpTipo').value,
-    sexo:    document.getElementById('fpSexo').value,
-    edad:    document.getElementById('fpEdad').value,
-    pt:      document.getElementById('fpPT').value,
-    te:      document.getElementById('fpTE').value,
-    origen:  document.getElementById('fpOrigen').value,
-    eps:     document.getElementById('fpEps').value,
-    func:    document.getElementById('fpFunc').value,
+    // Demográficos
+    origen:        pn('estado_nino') || 'estado_nino',
+    sem:           pn('semana') || 'semana',
+    tipo:          pn('tipo_participante') || 'tipo_participante',
+    edad_m:        pn('edadMeses') || pn('edadmeses') || 'edadMeses',
+    nom_siv:       pn('nom_ape_completos') || 'nom_ape_completos',
+    sex_siv:       'sexo',        // col14 SIV - fieldname directo (ea duplicado)
+    mun_siv:       'municipio',   // col21 SIV - fieldname directo (ea duplicado)
+    sub_siv:       'subregion',   // col22 SIV - fieldname directo (ea duplicado)
+    nom1:          pn('primer_nombre_nuevo') || 'primer_nombre_nuevo',
+    nom2:          pn('segundo_nombre_nuevo') || 'segundo_nombre_nuevo',
+    ape1:          pn('primer_apellido_nuevo') || 'primer_apellido_nuevo',
+    ape2:          pn('segundo_apellido_nuevo') || 'segundo_apellido_nuevo',
+    sex_new:       pn('sexo_2') || 'sexo_2',
+    mun_new:       pn('municipio_nuevo') || 'municipio_nuevo',
+    sub_new:       pn('subregion_calc') || 'subregion_calc',
+    num_doc:       pn('num_doc_participante') || 'num_doc_participante',
+    eps:           pn('nombre_eps') || 'nombre_eps',
+    eps2:          pn('nombre_eps_2') || 'nombre_eps_2',
+    func:          pn('nom_comp_funcionario') || 'nom_comp_funcionario',
+    edad_txt:      pn('edad_texto') || 'edad_texto',
+    obs:           pn('observaciones') || 'observaciones',
+    fecha_v:       ea('Fecha valoración nutricional') || pn('fecha_visita') || 'fecha_visita',
+    // SEG 1: valoración ANTERIOR (cols 68-79)
+    fecha_ant:     ea('Fecha valoración anterior')       || pn('fecha_valoracion_anterior'),
+    edad_ant:      ea('Edad valoración anterior')        || pn('edad_valoracion_anterior'),
+    peso_ant:      ea('Peso anterior Kg')                || pn('peso_anterior_kg') || pn('peso_anterior'),
+    talla_ant:     ea('Estatura anterior cms')           || pn('estatura_anterior_cms') || pn('estatura_anterior'),
+    // col72 y col104 mismo alias "Z-Peso/Talla" → shorter=anterior(72), longer=actual(104)
+    z_pt_ant:      shorter('Z-Peso/Talla')               || pn('z_pesotalla'),
+    // col75 alias "Clasificación Peso/Talla" ≠ col105 alias "Clasificación Peso/Talla Actual"
+    clas_pt_ant:   ea('Clasificación Peso/Talla')        || pn('clasificacion_pesotalla'),
+    // col76 y col106 mismo alias "Z-Talla/Edad" → shorter=anterior(76), longer=actual(106)
+    z_te_ant:      shorter('Z-Talla/Edad')               || pn('z_tallaedad'),
+    // col79 alias "Clasificación Talla/Edad" ≠ col177 alias "Clasificación Talla/Edad actual"
+    clas_te_ant:   ea('Clasificación Talla/Edad')        || pn('clasificacion_tallaedad'),
+    // col80 Z-Peso/Edad anterior = SIEMPRE VACÍO → no se mapea
+    // SEG 2/3: valoración ACTUAL (cols 82-177)
+    peso:          ea('Peso Kg')                         || pn('peso') || 'peso',
+    talla:         ea('Estatura cms')                    || pn('estatura') || 'estatura',
+    pb:            ea('Perímetro braquial cms')          || pn('perimetro_braquial') || 'perimetro_braquial',
+    pc:            ea('Perímetro cefálico cms')          || pn('perimetro_cefalico'),
+    z_pt:          longer('Z-Peso/Talla')                || pn('z_pesotalla_1') || pn('z_pesotalla_actual'),
+    clas_pt:       ea('Clasificación Peso/Talla Actual') || pn('clasificacion_pesotalla_1') || 'clasificacion_pesotalla_1',
+    z_te:          longer('Z-Talla/Edad')                || pn('z_tallaedad_1') || pn('z_tallaedad_actual'),
+    z_pe:          ea('Z-Peso/Edad')                     || pn('z_pesoedad'),
+    clas_pe:       ea('Clasificación Peso/Edad Actual')  || pn('clasificacion_pesoedad_actual'),
+    clas_te:       ea('Clasificación Talla/Edad actual') || pn('clasificacion_tallaedadactual') || 'clasificacion_tallaedadactual',
+    // Escolares (tipo2 con ciertas edades, cols 109-112)
+    z_te_imc:      ea('Z-Talla/Edad IMC')                || pn('z_tallaedad_imc'),
+    clas_te_imc:   ea('Clasificación Talla/Edad IMC')    || pn('clasificacion_tallaedad_imc'),
+    z_imc:         ea('Z-IMC/E')                         || pn('z_imc'),
+    clas_imc:      ea('Clasificación IMC/E')              || pn('clasificacion_imc'),
+    // Gestante (tipo3, cols 114-115)
+    imc_gest:      ea('IMC Gestante')                    || pn('imc_gestante'),
+    clas_imc_gest: ea('Clasificación IMC/Edad gestacional') || pn('clasificacion_gestante_2') || 'clasificacion_gestante_2',
+    // Aliases para getPT/getTE del dashboard
+    pt_ant_orig:   ea('Clasificación Peso/Talla')        || pn('clasificacion_pesotalla'),
+    pt_orig:       ea('Clasificación Peso/Talla Actual') || pn('clasificacion_pesotalla_1') || 'clasificacion_pesotalla_1',
+    te_ant_orig:   ea('Clasificación Talla/Edad')        || pn('clasificacion_tallaedad'),
+    te_orig:       ea('Clasificación Talla/Edad actual') || pn('clasificacion_tallaedadactual') || 'clasificacion_tallaedadactual',
+    gest_imc:      pn('clasificacion_gestante_2')        || 'clasificacion_gestante_2',
+    sem_gest:      ea('Semanas de gestación')            || pn('semanas_gestacion') || 'semanas_gestacion',
+    // Gestante extra
+    vacuna_prenatal: ea('¿Tiene completo el esquema de vacunación prenatal?') || pn('vacunacion_prenatal') || pn('esquema_vacunacion_prenatal'),
+    controles_pren:  ea('¿Asiste a controles prenatales?') || pn('controles_prenatales') || pn('asiste_controles'),
+    fecha_ctrl_pren: ea('Fecha último control prenatal') || pn('fecha_ultimo_control_prenatal') || pn('fecha_control_prenatal'),
+    edad_txt_gest:   ea('Edad:') || pn('edad_texto') || 'edad_texto',
   };
 }
 
-function applyPanelFilters(){
-  PF=getPanelValuesFromInputs();
-  CF={};
-  TIPO_FILTER=PF.tipo;
-  updateFilterBadge();
-  updateActiveBar();
-  renderTabs();
-  render();
-  toggleFilterPanel();
+// Fallback sin schema: detectar desde keys del primer registro
+function detectFromSample(sample) {
+  const keys = Object.keys(sample);
+  const fk = (...ps) => { for(const p of ps){const f=keys.find(k=>k.toLowerCase().includes(p.toLowerCase()));if(f)return f;}return null; };
+  const shorter = (...ps) => { for(const p of ps){const m=keys.filter(k=>k.toLowerCase().includes(p.toLowerCase()));if(m.length)return m.sort((a,b)=>a.length-b.length)[0];}return null; };
+  const longer  = (...ps) => { for(const p of ps){const m=keys.filter(k=>k.toLowerCase().includes(p.toLowerCase()));if(m.length)return m.sort((a,b)=>b.length-a.length)[0];}return null; };
+  return {
+    origen:        fk('estado_nino') || 'estado_nino',
+    sem:           fk('semana') || 'semana',
+    tipo:          fk('tipo_participante') || 'tipo_participante',
+    edad_m:        fk('edadMeses') || fk('edadmeses') || 'edadMeses',
+    nom_siv:       fk('nom_ape_completos') || 'nom_ape_completos',
+    sex_siv:       fk('sexo') || 'sexo',
+    mun_siv:       fk('municipio') || 'municipio',
+    sub_siv:       fk('subregion') || 'subregion',
+    nom1:          fk('primer_nombre_nuevo') || 'primer_nombre_nuevo',
+    nom2:          fk('segundo_nombre_nuevo') || 'segundo_nombre_nuevo',
+    ape1:          fk('primer_apellido_nuevo') || 'primer_apellido_nuevo',
+    ape2:          fk('segundo_apellido_nuevo') || 'segundo_apellido_nuevo',
+    sex_new:       fk('sexo_2') || 'sexo_2',
+    mun_new:       fk('municipio_nuevo') || 'municipio_nuevo',
+    sub_new:       fk('subregion_calc') || 'subregion_calc',
+    num_doc:       fk('num_doc_participante') || 'num_doc_participante',
+    eps:           fk('nombre_eps') || 'nombre_eps',
+    eps2:          fk('nombre_eps_2') || 'nombre_eps_2',
+    func:          fk('nom_comp_funcionario') || 'nom_comp_funcionario',
+    edad_txt:      fk('edad_texto') || 'edad_texto',
+    obs:           fk('observaciones') || 'observaciones',
+    fecha_v:       fk('fecha_visita') || 'fecha_visita',
+    fecha_ant:     fk('fecha_valoracion_anterior') || fk('valoracion_anterior'),
+    edad_ant:      fk('edad_valoracion_anterior'),
+    peso_ant:      fk('peso_anterior_kg') || fk('peso_anterior'),
+    talla_ant:     fk('estatura_anterior_cms') || fk('estatura_anterior'),
+    z_pt_ant:      shorter('z_pesotalla'),
+    clas_pt_ant:   shorter('clasificacion_pesotalla'),
+    z_te_ant:      shorter('z_tallaedad'),
+    clas_te_ant:   shorter('clasificacion_tallaedad'),
+    peso:          fk('peso') || 'peso',
+    talla:         fk('estatura') || 'estatura',
+    pb:            fk('perimetro_braquial') || 'perimetro_braquial',
+    pc:            fk('perimetro_cefalico'),
+    z_pt:          longer('z_pesotalla') || fk('z_pesotalla_1'),
+    clas_pt:       fk('clasificacion_pesotalla_1') || 'clasificacion_pesotalla_1',
+    z_te:          longer('z_tallaedad') || fk('z_tallaedad_1'),
+    z_pe:          fk('z_pesoedad') || fk('z_peso_edad'),
+    clas_pe:       longer('clasificacion_pesoedad') || fk('clasificacion_pesoedad_actual'),
+    clas_te:       fk('clasificacion_tallaedadactual') || 'clasificacion_tallaedadactual',
+    z_te_imc:      fk('z_tallaedadimc')||fk('z_tallaedad_imc')||fk('ztallaedadimc'),
+    clas_te_imc:   fk('clasificacion_tallaedad_imc')||fk('clasificacion_tallaedadimc')||fk('clasif_tallaedad_imc'),
+    z_imc:         fk('z_imc')||fk('zimce')||fk('z_imce'),
+    clas_imc:      fk('clasificacion_imc')||fk('clasificacion_imce')||fk('clasif_imc'),
+    imc_gest:      fk('imc_gestante'),
+    clas_imc_gest: fk('clasificacion_gestante_2') || 'clasificacion_gestante_2',
+    pt_ant_orig:   shorter('clasificacion_pesotalla'),
+    pt_orig:       fk('clasificacion_pesotalla_1') || 'clasificacion_pesotalla_1',
+    te_ant_orig:   shorter('clasificacion_tallaedad'),
+    te_orig:       fk('clasificacion_tallaedadactual') || 'clasificacion_tallaedadactual',
+    gest_imc:      fk('clasificacion_gestante_2') || 'clasificacion_gestante_2',
+    sem_gest:      fk('semanas_gestacion') || 'semanas_gestacion',
+    vacuna_prenatal: fk('vacunacion_prenatal') || fk('esquema_vacunacion_prenatal'),
+    controles_pren:  fk('controles_prenatales') || fk('asiste_controles'),
+    fecha_ctrl_pren: fk('fecha_ultimo_control_prenatal') || fk('fecha_control_prenatal'),
+    edad_txt_gest:   fk('edad_texto') || 'edad_texto',
+  };
 }
 
-function resetPanelFilters(){
-  PF={search:'',sub:'',mun:'',sem:'',tipo:'',sexo:'',edad:'',pt:'',te:'',origen:'',eps:'',func:''};
-  CF={};TIPO_FILTER='';
-  // Reset inputs
-  ['fpSearch','fpSub','fpMun','fpSem','fpTipo','fpSexo','fpEdad','fpPT','fpTE','fpOrigen','fpEps','fpFunc']
-    .forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
-  updateFilterBadge();
-  updateActiveBar();
-  renderTabs();
-  render();
-  if(panelOpen) toggleFilterPanel();
-}
-
-// ── ACTIVE BAR ───────────────────────────────────────
-const PF_LABELS={search:'Búsqueda',sub:'Subregión',mun:'Municipio',sem:'Semana',tipo:'Tipo',
-  sexo:'Sexo',edad:'Grupo edad',pt:'Peso/Talla',te:'Talla/Edad',origen:'Origen',eps:'EPS',func:'Funcionario'};
-const TIPO_LBL={'1':'< 6 meses','2':'6–71 meses','3':'Gestante'};
-
-function updateActiveBar(){
-  const bar=document.getElementById('activeBar');
-  const tagsEl=document.getElementById('activeBarTags');
-  const entries=Object.entries(PF).filter(([,v])=>v&&v!=='');
-  const cfEntries=Object.entries(CF);
-  const all=[...entries,...cfEntries.map(([k,v])=>[k+'_cf',v])];
-  if(all.length===0){bar.classList.remove('show');return;}
-  bar.classList.add('show');
-  tagsEl.innerHTML=entries.map(([k,v])=>{
-    const lbl=k==='tipo'?(TIPO_LBL[v]||v):v;
-    return `<span class="fp-tag">${PF_LABELS[k]||k}: <b>${lbl}</b> <i class="ti ti-x" onclick="removePFFilter('${k}')"></i></span>`;
-  }).join('')
-  +cfEntries.map(([k,v])=>`<span class="fp-tag" style="background:#EEF2FF;border-color:#C7D2FE;color:#3730a3">Gráfica ${k}: <b>${v}</b> <i class="ti ti-x" onclick="removeCF('${k}')"></i></span>`).join('');
-}
-
-function removePFFilter(k){PF[k]='';if(k==='tipo')TIPO_FILTER='';updateFilterBadge();updateActiveBar();renderTabs();render();}
-function removeCF(k){delete CF[k];updateFilterBadge();updateActiveBar();render();}
-
-function renderActiveTags(pv){
-  const entries=Object.entries(pv).filter(([,v])=>v&&v!=='');
-  document.getElementById('fpActiveTags').innerHTML=entries.map(([k,v])=>{
-    const lbl=k==='tipo'?(TIPO_LBL[v]||v):v;
-    return `<span class="fp-tag">${PF_LABELS[k]||k}: ${lbl}</span>`;
-  }).join('');
-}
-
-// ── UTILS ─────────────────────────────────────────────
-function show(id){
-  ['loadingScreen','errorScreen','dashScreen'].forEach(s=>{
-    const el=document.getElementById(s);
-    if(s===id){el.style.display=s==='dashScreen'?'block':'flex';}
-    else{el.style.display='none';}
+// ── HISTORIAL ─────────────────────────────────────────
+function buildByDoc(data){
+  BY_DOC={};
+  data.forEach(r=>{
+    const d=String(r[K.num_doc]||'').trim();
+    if(d){if(!BY_DOC[d])BY_DOC[d]=[];BY_DOC[d].push(r);}
   });
 }
-function setLoading(msg,sub=''){document.getElementById('loadingMsg').textContent=msg;document.getElementById('loadingSub').textContent=sub;}
-function countBy(arr,key){const c={};arr.forEach(r=>{const v=r[key];if(v!=null&&String(v).trim()!==''){c[v]=(c[v]||0)+1;}});return c;}
-function topN(obj,n){return Object.entries(obj).sort((a,b)=>b[1]-a[1]).slice(0,n);}
-function getEdadGrupo(e){const n=parseInt(e||0);if(n<=5)return '0-5m';if(n<=11)return '6-11m';if(n<=23)return '12-23m';if(n<=35)return '24-35m';if(n<=47)return '36-47m';return '48-71m';}
-function getSexLabel(v){const m={'1':'Masculino','2':'Femenino','M':'Masculino','F':'Femenino'};return m[v]||v;}
-function getTipoLabel(v){const m={'1':'< 6 meses','2':'6-71 meses','3':'Gestante'};return m[v]||v;}
 
-const MUNICIPIO_MAP={'05120':'Cáceres','05154':'Caucasia','05250':'El Bagre','05495':'Nechí','05790':'Tarazá','05895':'Zaragoza','05579':'Puerto Berrío','05585':'Puerto Nare','05591':'Puerto Triunfo','05893':'Yondó','05142':'Caracolí','05425':'Maceo','05031':'Amalfi','05040':'Anorí','05190':'Cisneros','05604':'Remedios','05670':'San Roque','05690':'Santo Domingo','05736':'Segovia','05858':'Vegachí','05885':'Yalí','05890':'Yolombó','05038':'Angostura','05086':'Belmira','05107':'Briceño','05134':'Campamento','05150':'Carolina del Príncipe','05237':'Don Matías','05264':'Entrerríos','05310':'Gómez Plata','05315':'Guadalupe','05361':'Ituango','05647':'San Andrés de Cuerquia','05658':'San José de la Montaña','05664':'San Pedro de los Milagros','05686':'Santa Rosa de Osos','05819':'Toledo','05854':'Valdivia','05887':'Yarumal','05004':'Abriaquí','05044':'Anzá','05059':'Armenia','05113':'Buriticá','05125':'Caicedo','05138':'Cañasgordas','05234':'Dabeiba','05240':'Ebéjico','05284':'Frontino','05306':'Giraldo','05347':'Heliconia','05411':'Liborina','05501':'Olaya','05543':'Peque','05628':'Sabanalarga','05656':'San Jerónimo','05042':'Santa Fé de Antioquia','05761':'Sopetrán','05842':'Uramita','05002':'Abejorral','05021':'Alejandría','05055':'Argelia','05197':'Cocorná','05206':'Concepción','05148':'El Carmen de Viboral','05541':'El Peñol','05607':'El Retiro','05697':'El Santuario','05313':'Granada','05318':'Guarne','05321':'Guatapé','05376':'La Ceja','05400':'La Unión','05440':'Marinilla','05483':'Nariño','05615':'Rionegro','05649':'San Carlos','05652':'San Francisco','05660':'San Luis','05667':'San Rafael','05674':'San Vicente','05756':'Sonsón','05030':'Amagá','05034':'Andes','05036':'Angelópolis','05091':'Betania','05093':'Betulia','05145':'Caramanta','05101':'Ciudad Bolívar','05209':'Concordia','05282':'Fredonia','05353':'Hispania','05364':'Jardín','05368':'Jericó','05390':'La Pintada','05467':'Montebello','05576':'Pueblorrico','05642':'Salgar','05679':'Santa Bárbara','05789':'Támesis','05792':'Tarso','05809':'Titiribí','05847':'Urrao','05856':'Valparaíso','05861':'Venecia','05045':'Apartadó','05051':'Arboletes','05147':'Carepa','05172':'Chigorodó','05475':'Murindó','05480':'Mutatá','05490':'Necoclí','05659':'San Juan de Urabá','05665':'San Pedro de Urabá','05837':'Turbo','05873':'Vigía del Fuerte','05079':'Barbosa','05088':'Bello','05129':'Caldas','05212':'Copacabana','05266':'Envigado','05308':'Girardota','05360':'Itagüi','05380':'La Estrella','05001':'Medellín','05631':'Sabaneta'};
-
-function getNombre(r){
-  const ori=String(r[KEYS.origen]||'').toLowerCase();
-  if(ori==='nuevo'){const n=[r[KEYS.nombre1],r[KEYS.nombre2],r[KEYS.apellido1],r[KEYS.apellido2]].filter(Boolean).join(' ').trim();return n||'—';}
-  const nom=r[KEYS.nombre_siv];return(nom&&nom.trim())?nom.trim():'—';
-}
-function getMunicipio(r){
-  const ori=String(r[KEYS.origen]||'').toLowerCase();
-  if(ori==='nuevo'){const c=r[KEYS.mun_new];if(c&&MUNICIPIO_MAP[c])return MUNICIPIO_MAP[c];}
-  return r[KEYS.mun_siv]||'—';
-}
-function getSubregion(r){
-  const ori=String(r[KEYS.origen]||'').toLowerCase();
-  if(ori==='nuevo')return r[KEYS.sub_new]||r[KEYS.sub_siv]||'—';
-  return r[KEYS.sub_siv]||'—';
-}
-function getSexo(r){
-  const ori=String(r[KEYS.origen]||'').toLowerCase();
-  const val=ori==='nuevo'?r[KEYS.sexo_new]||r[KEYS.sexo_siv]:r[KEYS.sexo_siv];
-  return getSexLabel(val||'');
-}
-function getPT(r){
-  if(r[KEYS.tipo]==='3'){const g=r[KEYS.gestante_imc];return(g&&g.trim())?g:'—';}
-  const v=r[KEYS.pt];if(v&&v.trim()&&v!=='Dato desconocido')return v;
-  const v2=r[KEYS.pt2];if(v2&&v2.trim()&&v2!=='Dato desconocido')return v2;
-  return '';
-}
-function getTE(r){
-  if(r[KEYS.tipo]==='3'){const sg=r[KEYS.sem_gestacion];return sg?`${sg} sem. gestación`:'—';}
-  const v=r[KEYS.te];if(v&&v.trim()&&v!=='Dato desconocido')return v;
-  const v2=r[KEYS.te2];if(v2&&v2.trim()&&v2!=='Dato desconocido')return v2;
-  return '—';
-}
-
-// ── LOAD ─────────────────────────────────────────────
-async function init(){
-  show('loadingScreen');setLoading('Conectando con ArcGIS...','Consultando Feature Layer');
+function getTimeline(r){
   try{
-    const test=await fetch(`${SVC_URL}?f=json`).catch(()=>{throw new Error('Sin conexión a ArcGIS. Verifica que la capa sea pública.');});
-    const tj=await test.json();
-    if(tj.error)throw new Error('La capa requiere autenticación. Compartir → Todos (público).');
+  const doc=String(r[K.num_doc]||'').trim();
+  const recs=(BY_DOC[doc]||[r]).slice().sort((a,b)=>(toMs(a[K.fecha_v])||0)-(toMs(b[K.fecha_v])||0));
+  const old=recs[0], newest=recs[recs.length-1];
+  const tipo=old[K.tipo]||'2';
+  let s1,s2,s3=null;
+
+  if(tipo==='3'){
+    // ── GESTANTE ──────────────────────────────────────────
+    // SEG1: valoración ANTERIOR
+    // NOTA: col68 (Fecha valoración anterior) está VACÍA en gestantes
+    // col69=Edad anterior (texto), col70=Peso ant, col71=Talla ant
+    // No hay semanas de gestación ni IMC en el anterior
+    s1={tipo,
+        fecha:          null,               // col68 vacía en gestantes
+        edad:           cs(old[K.edad_ant]),// col69 texto ej: "23 años 7 meses"
+        peso:           fn(old[K.peso_ant]),// col70
+        talla:          fn(old[K.talla_ant]),// col71
+        sem_gest:       null,
+        imc:            null,
+        clas_imc:       null,
+        // Sin Z-scores en gestante
+    };
+    // SEG2: valoración ACTUAL del registro más antiguo
+    s2={tipo,
+        fecha:          fd(old[K.fecha_v]),
+        edad:           cs(old[K.edad_txt_gest]),// texto: "24 años 0 meses 16 días"
+        peso:           fn(old[K.peso]),
+        talla:          fn(old[K.talla]),
+        sem_gest:       old[K.sem_gest],    // col85
+        imc:            fn(old[K.imc_gest]),// col114
+        clas_imc:       cs(old[K.clas_imc_gest]),// col115
+        vacuna_pren:    old[K.vacuna_prenatal],
+        controles_pren: old[K.controles_pren],
+        fecha_ctrl_pren:fd(old[K.fecha_ctrl_pren]),
+    };
+    if(recs.length>1){
+      s3={tipo,
+          fecha:          fd(newest[K.fecha_v]),
+          edad:           cs(newest[K.edad_txt_gest]),
+          peso:           fn(newest[K.peso]),
+          talla:          fn(newest[K.talla]),
+          sem_gest:       newest[K.sem_gest],
+          imc:            fn(newest[K.imc_gest]),
+          clas_imc:       cs(newest[K.clas_imc_gest]),
+          vacuna_pren:    newest[K.vacuna_prenatal],
+          controles_pren: newest[K.controles_pren],
+          fecha_ctrl_pren:fd(newest[K.fecha_ctrl_pren]),
+      };
+    }
+  } else {
+    // ── TIPO 1 (<6m) Y TIPO 2 (6-71m) ─────────────────────
+    // SEG1: datos de la valoración ANTERIOR (cols 68-79 del registro más antiguo)
+    // NOTA: Z-Peso/Edad anterior (col80) SIEMPRE VACÍO → se omite
+    s1={tipo,
+        fecha:      fd(old[K.fecha_ant]),
+        edad_m:     cs(old[K.edad_ant]),
+        peso:       fn(old[K.peso_ant]),
+        talla:      fn(old[K.talla_ant]),
+        pb:         null,   // PB anterior no capturado
+        pc:         null,   // PC anterior no capturado
+        zPT:        fz(old[K.z_pt_ant]),
+        clas_pt:    cs(old[K.clas_pt_ant]),
+        zTE:        fz(old[K.z_te_ant]),
+        clas_te:    cs(old[K.clas_te_ant]),
+        zPE:        null,   // col80 siempre vacío
+        clas_pe:    null,
+        // Escolares: no aplica en anterior
+        zTE_imc:    null, clas_te_imc: null,
+        zIMC:       null, clas_imc:    null,
+    };
+    // SEG2: datos de la valoración ACTUAL del registro más antiguo (cols 82-177)
+    s2={tipo,
+        fecha:      fd(old[K.fecha_v]),
+        edad_m:     old[K.edad_m],
+        peso:       fn(old[K.peso]),
+        talla:      fn(old[K.talla]),
+        pb:         tipo==='2' ? fn(old[K.pb]) : null,
+        pc:         tipo==='1' ? fn(old[K.pc]) : null,
+        zPT:        fz(old[K.z_pt]),
+        clas_pt:    cs(old[K.clas_pt]),
+        zTE:        fz(old[K.z_te]),
+        clas_te:    cs(old[K.clas_te]),
+        zPE:        fz(old[K.z_pe]),
+        clas_pe:    cs(old[K.clas_pe]),
+        // Escolares (tipo2, cuando tienen estas columnas):
+        zTE_imc:    fz(old[K.z_te_imc]),
+        clas_te_imc:cs(old[K.clas_te_imc]),
+        zIMC:       fz(old[K.z_imc]),
+        clas_imc:   cs(old[K.clas_imc]),
+    };
+    if(recs.length>1){
+      // SEG3+: datos actuales del registro más reciente (mismas cols 82-177)
+      s3={tipo,
+          fecha:      fd(newest[K.fecha_v]),
+          edad_m:     newest[K.edad_m],
+          peso:       fn(newest[K.peso]),
+          talla:      fn(newest[K.talla]),
+          pb:         tipo==='2' ? fn(newest[K.pb]) : null,
+          pc:         tipo==='1' ? fn(newest[K.pc]) : null,
+          zPT:        fz(newest[K.z_pt]),
+          clas_pt:    cs(newest[K.clas_pt]),
+          zTE:        fz(newest[K.z_te]),
+          clas_te:    cs(newest[K.clas_te]),
+          zPE:        fz(newest[K.z_pe]),
+          clas_pe:    cs(newest[K.clas_pe]),
+          zTE_imc:    fz(newest[K.z_te_imc]),
+          clas_te_imc:cs(newest[K.clas_te_imc]),
+          zIMC:       fz(newest[K.z_imc]),
+          clas_imc:   cs(newest[K.clas_imc]),
+      };
+    }
+  }
+
+  // Evolución por cada indicador independiente
+  // e12/e23 = evolución de P/T (indicador principal DNT aguda, para pills y filtro)
+  // Las pills y el filtro usan P/T; el ribbon muestra los 3 desglosados
+  if(tipo==='3'){
+    const e12 = evolC(s1.clas_imc, s2.clas_imc);
+    const e23 = s3 ? evolC(s2.clas_imc, s3.clas_imc) : null;
+    return {s1,s2,s3,e12,e23,
+      // Gestante: solo IMC
+      e12_pt:e12, e12_te:'nd', e12_pe:'nd',
+      e23_pt:e23, e23_te:'nd', e23_pe:'nd'};
+  } else {
+    // P/T: indicador principal (DNT aguda)
+    const e12_pt = evolZ(s1.zPT, s2.zPT, s1.clas_pt, s2.clas_pt);
+    const e23_pt = s3 ? evolZ(s2.zPT, s3.zPT, s2.clas_pt, s3.clas_pt) : null;
+    // T/E: indicador de cronicidad
+    const e12_te = evolZ(s1.zTE, s2.zTE, s1.clas_te, s2.clas_te);
+    const e23_te = s3 ? evolZ(s2.zTE, s3.zTE, s2.clas_te, s3.clas_te) : null;
+    // P/E: indicador combinado (sin dato anterior siempre → 'nd')
+    const e12_pe = evolZ(s1.zPE, s2.zPE, s1.clas_pe, s2.clas_pe);
+    const e23_pe = s3 ? evolZ(s2.zPE, s3.zPE, s2.clas_pe, s3.clas_pe) : null;
+    // e12/e23 = P/T para pills y filtro
+    return {s1,s2,s3,
+      e12:e12_pt, e23:e23_pt,
+      e12_pt, e12_te, e12_pe,
+      e23_pt, e23_te, e23_pe};
+  }
+  }catch(err){
+    // Fallback seguro si algo falla
+    const nd={tipo:r[K.tipo]||'2',fecha:'—',peso:null,talla:null,clas_pt:null,clas_te:null,clas_pe:null,clas_imc:null,zPT:null,zTE:null,zPE:null,pb:null,pc:null,zTE_imc:null,clas_te_imc:null,zIMC:null,clas_imc:null,imc:null,sem_gest:null};
+    return {s1:nd,s2:nd,s3:null,e12:'nd',e23:null,e12_pt:'nd',e12_te:'nd',e12_pe:'nd',e23_pt:null,e23_te:null,e23_pe:null};
+  }
+}
+
+function toMs(v){if(!v)return null;if(typeof v==='number')return v;return new Date(v).getTime()||null;}
+function sevPT(v){
+  // Escala: 0=severa(peor) 1=moderada 2=riesgo 3=sobrepeso/exceso 4=adecuado(mejor)
+  // Cubre P/T, T/E, P/E, IMC/E, T/E IMC
+  if(!v)return-1;
+  const s=v.toLowerCase().trim();
+  // Severo / peor
+  if(s==='dnt severa'||s.includes('severa')||s==='delgadez'||s.includes('talla baja para la'))return 0;
+  // Moderado
+  if(s==='dnt moderada'||s.includes('moderada')||s.includes('bajo peso')||s.includes('global')||s.includes('riesgo de delgadez')||s.includes('riesgo de retraso'))return 1;
+  // Riesgo
+  if(s==='riesgo dnt'||s.includes('riesgo de desnutrición')||s.includes('riesgo dnt')||s.includes('riesgo de talla'))return 2;
+  // Adecuado / normal
+  if(s.includes('adecuado')||s.includes('normal')||s.includes('talla adecuada'))return 4;
+  // Exceso (sobrepeso/obesidad)
+  if(s.includes('riesgo de sobrepeso'))return 3;
+  if(s==='sobrepeso'||s==='obesidad'||s.includes('sobrepeso')||s.includes('obesidad'))return 3;
+  // Sin dato
+  if(s.includes('desconocido')||s.includes('sin dato'))return-1;
+  return-1;
+}
+function evolZ(z1,z2,c1,c2){
+  // Clasificación PRIMERO (más confiable). Z como desempate dentro de misma categoría.
+  const a=sevPT(c1),b=sevPT(c2);
+  if(a>=0&&b>=0){
+    if(b>a)return'mejor';
+    if(b<a)return'peor';
+    if(z1!=null&&z2!=null){const d=parseFloat(z2)-parseFloat(z1);if(d>0.2)return'mejor';if(d<-0.2)return'peor';}
+    return'igual';
+  }
+  if(z1!=null&&z2!=null){const d=parseFloat(z2)-parseFloat(z1);if(d>0.2)return'mejor';if(d<-0.2)return'peor';return'igual';}
+  return'nd';
+}
+function evolC(c1,c2){
+  if(!c1||!c2)return'nd';
+  const a=sevPT(c1),b=sevPT(c2);
+  if(a<0||b<0)return'nd';
+  if(b>a)return'mejor';if(b<a)return'peor';return'igual';
+}
+
+function pcls(v){if(!v)return'nd';const s=v.toLowerCase();if(s.includes('severa')||s==='delgadez'||s.includes('talla baja para'))return'sev';if(s.includes('moderada')||s.includes('bajo peso')||s.includes('global')||s.includes('riesgo de delgadez')||s.includes('riesgo de retraso'))return'mod';if(s.includes('riesgo'))return'risk';if(s.includes('adecuado')||s.includes('normal'))return'ok';if(s.includes('sobrepeso')||s.includes('obesidad'))return'sob';return'nd';}
+function mainCls(seg){return seg.tipo==='3'?pcls(seg.clas_imc):pcls(seg.clas_pt);}
+function pLabel(c){return{sev:'S',mod:'M',risk:'R',ok:'✓',sob:'↑',nd:'?'}[c]||'?';}
+
+function matchEvol(r,ef){
+  if(!ef)return true;
+  const tl=getTimeline(r);
+  return ef==='seg3'?!!tl.s3:tl.e12===ef;
+}
+
+// ── CARGA ─────────────────────────────────────────────
+async function init(){
+  show('loadingScreen');ld('Conectando con ArcGIS...','Consultando Feature Layer');
+  try{
+    // Obtener schema para auto-detección de campos
+    const schemaResp = await fetch(`${SVC}?f=json`).catch(()=>{throw new Error('Sin conexión a ArcGIS.');});
+    const schema = await schemaResp.json();
+    if(schema.error)throw new Error('La capa requiere autenticación.');
+    const fields = schema.fields || [];
+
     let offset=0,all=[];
     while(true){
       const p=new URLSearchParams({where:'1=1',outFields:'*',resultOffset:offset,resultRecordCount:2000,f:'json'});
-      const r=await fetch(`${SVC_URL}/query?${p}`).catch(()=>{throw new Error('Timeout al cargar datos.');});
-      const j=await r.json();
-      if(j.error)throw new Error('Error ArcGIS: '+j.error.message);
-      if(!j.features||j.features.length===0)break;
+      const resp=await fetch(`${SVC}/query?${p}`).catch(()=>{throw new Error('Timeout.');});
+      const j=await resp.json();
+      if(j.error)throw new Error('ArcGIS: '+j.error.message);
+      if(!j.features||!j.features.length)break;
       all=all.concat(j.features.map(f=>f.attributes));
-      setLoading('Cargando…',`${all.length} registros`);
+      ld('Cargando…',`${all.length} registros`);
       if(!j.exceededTransferLimit)break;
       offset+=2000;
     }
-    if(!all.length)throw new Error('La capa no tiene datos o no es pública.');
-    ALL_DATA=all;
-    detectKeys(all[0]);
+    if(!all.length)throw new Error('Sin datos.');
+    ALL=all;
+    // Auto-detectar campos: primero desde schema, luego desde sample
+    if(fields.length>0){
+      K=autoDetectFields(all[0], fields);
+    } else {
+      K=detectFromSample(all[0]);
+    }
     enrichData();
-    populateSelects();
-    PF={search:'',sub:'',mun:'',sem:'',tipo:'',sexo:'',edad:'',pt:'',te:'',origen:'',eps:'',func:''};
-    CF={};TIPO_FILTER='';
-    // Aplicar filtros desde URL si existen (nueva pestaña desde iframe)
+    buildByDoc(all);
+    populateSels();
+    PF={search:'',sub:'',mun:'',sem:'',tipo:'',sexo:'',edad:'',pt:'',te:'',origen:'',eps:'',func:'',evol:'',fechaDesde:'',fechaHasta:''};
+    CF={};TF='';
     applyUrlParams();
     renderTabs();render();
     document.getElementById('btnRefresh').style.display='inline-flex';
-    // Si viene con ?dl=1 siempre mostrar botón Excel directo (es pestaña nueva, no iframe)
-    const vieneConDl = new URLSearchParams(window.location.search).get('dl')==='1';
-    const enIframe   = !vieneConDl && isInIframe();
-    if(enIframe){
-      document.getElementById('btnOpenTab').style.display='inline-flex';
-      document.getElementById('btnExport').style.display='none';
-    } else {
-      document.getElementById('btnExport').style.display='inline-flex';
-      document.getElementById('btnOpenTab').style.display='none';
-    }
+    const iframe=isInIframe()&&!new URLSearchParams(window.location.search).get('dl');
+    document.getElementById(iframe?'btnOpenTab':'btnExport').style.display='inline-flex';
     document.getElementById('topMeta').textContent=`${all.length.toLocaleString()} · ${new Date().toLocaleTimeString('es-CO')}`;
     show('dashScreen');
-    // Descarga automática cuando viene de iframe con ?dl=1
-    if(window._autoDownload){
-      window._autoDownload=false;
-      // Mostrar toast antes de disparar
-      showToast('⬇️ Generando Excel, espera un momento…');
-      setTimeout(()=>exportExcel(), 600);
-    }
-  }catch(e){document.getElementById('errMsg').textContent=e.message||'Error desconocido';show('errorScreen');}
+    if(window._autoDownload){window._autoDownload=false;setTimeout(()=>exportExcel(),600);}
+  }catch(e){document.getElementById('errMsg').textContent=e.message||'Error';show('errorScreen');}
 }
-
-async function reload(){PF={search:'',sub:'',mun:'',sem:'',tipo:'',sexo:'',edad:'',pt:'',te:'',origen:'',eps:'',func:''};CF={};await init();}
-
-function detectKeys(s){
-  KEYS={origen:'estado_nino',pt:'clasificacion_pesotalla',pt2:'clasificacion_pesotalla_1',
-    te:'clasificacion_tallaedadactual',te2:'clasificacion_tallaedad',sem:'semana',tipo:'tipo_participante',
-    edad:'edadMeses',nombre_siv:'nom_ape_completos',sexo_siv:'sexo',mun_siv:'municipio',sub_siv:'subregion',
-    nombre1:'primer_nombre_nuevo',nombre2:'segundo_nombre_nuevo',apellido1:'primer_apellido_nuevo',
-    apellido2:'segundo_apellido_nuevo',sexo_new:'sexo_2',mun_new:'municipio_nuevo',sub_new:'subregion_calc',
-    pt_imc:'clasificacion_tallaedadimc',imc:'clasificacion_imc',gestante_imc:'clasificacion_gestante_2',
-    sem_gestacion:'semanas_gestacion',peso:'peso',estatura:'estatura',pb:'perimetro_braquial',
-    edad_texto:'edad_texto',num_doc:'num_doc_participante',doc_tipo:'tipo_documento',
-    eps:'nombre_eps',eps2:'nombre_eps_2',obs:'observaciones',funcionario:'nom_comp_funcionario',fecha_vis:'fecha_visita'};
-}
+async function reload(){ALL=[];BY_DOC={};await init();}
 
 function enrichData(){
-  ALL_DATA.forEach(r=>{
-    r.__nombre    =getNombre(r);
-    r.__municipio =getMunicipio(r);
-    r.__subregion =getSubregion(r);
-    r.__sexLabel  =getSexo(r);
-    r.__edadGrupo =getEdadGrupo(r[KEYS.edad]);
-    r.__tipoLabel =getTipoLabel(r[KEYS.tipo]);
-    r.__origen    =r[KEYS.origen]||'';
-    r.__pt        =getPT(r);
-    r.__te        =getTE(r);
-    r.__eps       =(r[KEYS.eps]||r[KEYS.eps2]||'').trim();
-    r.__func      =(r[KEYS.funcionario]||'').trim();
-    r.__semStr    =r[KEYS.sem]?String(r[KEYS.sem]):'';
+  ALL.forEach(r=>{
+    r.__n=getNom(r); r.__m=getMun(r); r.__s=getSub(r);
+    r.__sx=getSex(r); r.__eg=getEG(r[K.edad_m]);
+    r.__tl=({'1':'< 6 meses','2':'6-71 meses','3':'Gestante'})[r[K.tipo]]||r[K.tipo]||'';
+    r.__ori=r[K.origen]||'';
+    r.__pt=getPT(r); r.__te=getTE(r);
+    r.__eps=(r[K.eps]||r[K.eps2]||'').trim();
+    r.__fn=(r[K.func]||'').trim();
+    r.__sem=r[K.sem]?String(r[K.sem]):'';
   });
 }
 
-// ── POPULATE SELECTS ─────────────────────────────────
-function populateSelects(){
-  const unique=(key,transform)=>[...new Set(ALL_DATA.map(r=>transform?transform(r):r[key]).filter(v=>v&&v!=='—'&&v!==''))].sort();
-  const fill=(id,vals)=>{const sel=document.getElementById(id);vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);});};
-  fill('fpSub',   unique(null,r=>r.__subregion));
-  fill('fpMun',   unique(null,r=>r.__municipio));
-  fill('fpSem',   unique(null,r=>r.__semStr).sort((a,b)=>Number(a)-Number(b)));
-  fill('fpPT',    unique(null,r=>r.__pt).filter(v=>v&&v!=='Dato desconocido'));
-  fill('fpTE',    unique(null,r=>r.__te).filter(v=>v&&v!=='—'&&v!=='Dato desconocido'));
-  fill('fpOrigen',unique(null,r=>r.__origen));
-  fill('fpEps',   unique(null,r=>r.__eps));
-  fill('fpFunc',  unique(null,r=>r.__func));
+function populateSels(){
+  const u=(fn)=>[...new Set(ALL.map(fn).filter(v=>v&&v!=='—'&&v!==''))].sort();
+  const fill=(id,vals)=>{const s=document.getElementById(id);vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;s.appendChild(o);});};
+  fill('fpSub',u(r=>r.__s));fill('fpMun',u(r=>r.__m));
+  fill('fpSem',u(r=>r.__sem).sort((a,b)=>Number(a)-Number(b)));
+  fill('fpPT',u(r=>r.__pt).filter(v=>v&&v!=='Dato desconocido'));
+  fill('fpTE',u(r=>r.__te).filter(v=>v&&v!=='—'&&v!=='Dato desconocido'));
+  fill('fpOrigen',u(r=>r.__ori));fill('fpEps',u(r=>r.__eps));fill('fpFunc',u(r=>r.__fn));
 }
 
-// ── FILTER ENGINE ────────────────────────────────────
+// ── FILTROS ────────────────────────────────────────────
+function toggleFP(){fpOpen=!fpOpen;document.getElementById('filterPanel').classList.toggle('open',fpOpen);document.getElementById('btnFilter').classList.toggle('has-filters',cntF()>0);if(fpOpen)updLC();}
+function cntF(){return Object.values(PF).filter(v=>v&&v!=='').length+Object.keys(CF).length;}
+function updBadge(){const n=cntF();const b=document.getElementById('filterBadge');b.textContent=n;b.classList.toggle('show',n>0);document.getElementById('btnFilter').classList.toggle('has-filters',n>0);}
+function onFpChange(){updLC();}
+function updLC(){document.getElementById('fpResults').textContent=`${getFiltered(getPFI()).length.toLocaleString()} registros`;}
+function getPFI(){return{search:document.getElementById('fpSearch').value.trim().toLowerCase(),sub:document.getElementById('fpSub').value,mun:document.getElementById('fpMun').value,sem:document.getElementById('fpSem').value,tipo:document.getElementById('fpTipo').value,sexo:document.getElementById('fpSexo').value,edad:document.getElementById('fpEdad').value,pt:document.getElementById('fpPT').value,te:document.getElementById('fpTE').value,origen:document.getElementById('fpOrigen').value,eps:document.getElementById('fpEps').value,func:document.getElementById('fpFunc').value,evol:document.getElementById('fpEvol').value,fechaDesde:document.getElementById('fpFechaDesde').value,fechaHasta:document.getElementById('fpFechaHasta').value};}
+function applyPF(){PF=getPFI();CF={};TF=PF.tipo;updBadge();updAB();renderTabs();render();toggleFP();}
+function resetPF(){PF={search:'',sub:'',mun:'',sem:'',tipo:'',sexo:'',edad:'',pt:'',te:'',origen:'',eps:'',func:'',evol:'',fechaDesde:'',fechaHasta:''};CF={};TF='';['fpSearch','fpSub','fpMun','fpSem','fpTipo','fpSexo','fpEdad','fpPT','fpTE','fpOrigen','fpEps','fpFunc','fpEvol','fpFechaDesde','fpFechaHasta'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});updBadge();updAB();renderTabs();render();if(fpOpen)toggleFP();}
+const PFL={search:'Búsqueda',sub:'Subregión',mun:'Municipio',sem:'Semana',tipo:'Tipo',sexo:'Sexo',edad:'Edad',pt:'P/T',te:'T/E',origen:'Origen',eps:'EPS',func:'Funcionario',evol:'Evolución',fechaDesde:'Fecha desde',fechaHasta:'Fecha hasta'};
+const TLB={'1':'< 6 m','2':'6–71 m','3':'Gestante'};
+function updAB(){const bar=document.getElementById('activeBar');const te=document.getElementById('activeBarTags');const ents=Object.entries(PF).filter(([,v])=>v&&v!=='');const ce=Object.entries(CF);if(!ents.length&&!ce.length){bar.classList.remove('show');return;}bar.classList.add('show');te.innerHTML=ents.map(([k,v])=>{const l=k==='tipo'?(TLB[v]||v):v;return`<span class="fp-tag">${PFL[k]||k}: <b>${l}</b> <i class="ti ti-x" onclick="rmPF('${k}')"></i></span>`;}).join('')+ce.map(([k,v])=>`<span class="fp-tag" style="background:#EEF2FF;border-color:#C7D2FE;color:#3730a3">${k}: <b>${v}</b> <i class="ti ti-x" onclick="rmCF('${k}')"></i></span>`).join('');}
+function rmPF(k){PF[k]='';if(k==='tipo')TF='';updBadge();updAB();renderTabs();render();}
+function rmCF(k){delete CF[k];updBadge();updAB();render();}
+
 function getFiltered(pf){
   const f=pf||PF;
-  return ALL_DATA.filter(r=>{
-    // Tab tipo
-    if(TIPO_FILTER&&r[KEYS.tipo]!==TIPO_FILTER)return false;
-    // Panel filters
-    if(f.sub     &&r.__subregion!==f.sub)     return false;
-    if(f.mun     &&r.__municipio!==f.mun)     return false;
-    if(f.sem     &&r.__semStr!==f.sem)         return false;
-    if(f.tipo    &&r[KEYS.tipo]!==f.tipo)     return false;
-    if(f.sexo    &&r.__sexLabel!==f.sexo)     return false;
-    if(f.edad    &&r.__edadGrupo!==f.edad)    return false;
-    if(f.pt      &&r.__pt!==f.pt)             return false;
-    if(f.te      &&r.__te!==f.te)             return false;
-    if(f.origen  &&r.__origen!==f.origen)     return false;
-    if(f.eps     &&r.__eps!==f.eps)           return false;
-    if(f.func    &&r.__func!==f.func)         return false;
-    if(f.search){
-      const q=f.search;
-      const nom=(r.__nombre||'').toLowerCase();
-      const doc=String(r[KEYS.num_doc]||'').toLowerCase();
-      if(!nom.includes(q)&&!doc.includes(q))return false;
-    }
-    // Chart cross-filters
-    for(const[dim,val]of Object.entries(CF)){
-      if(dim==='pt'&&r.__pt!==val)return false;
-      if(dim==='te'&&r.__te!==val)return false;
-      if(dim==='sub'&&r.__subregion!==val)return false;
-      if(dim==='mun'&&r.__municipio!==val)return false;
-      if(dim==='edad'&&r.__edadGrupo!==val)return false;
-      if(dim==='sexo'&&r.__sexLabel!==val)return false;
-      if(dim==='sem'&&r.__semStr!==String(val))return false;
-      if(dim==='ori'&&r.__origen!==val)return false;
-      if(dim==='tipo'&&r.__tipoLabel!==val)return false;
+  return ALL.filter(r=>{
+    if(TF&&r[K.tipo]!==TF)return false;
+    if(f.sub&&r.__s!==f.sub)return false;
+    if(f.mun&&r.__m!==f.mun)return false;
+    if(f.sem&&r.__sem!==f.sem)return false;
+    if(f.tipo&&r[K.tipo]!==f.tipo)return false;
+    if(f.sexo&&r.__sx!==f.sexo)return false;
+    if(f.edad&&r.__eg!==f.edad)return false;
+    if(f.pt&&r.__pt!==f.pt)return false;
+    if(f.te&&r.__te!==f.te)return false;
+    if(f.origen&&r.__ori!==f.origen)return false;
+    if(f.eps&&r.__eps!==f.eps)return false;
+    if(f.fechaDesde){const fd=new Date(f.fechaDesde).getTime();const rv=toMs(r[K.fecha_v]);if(!rv||rv<fd)return false;}
+    if(f.fechaHasta){const fh=new Date(f.fechaHasta+'T23:59:59').getTime();const rv=toMs(r[K.fecha_v]);if(!rv||rv>fh)return false;}
+    if(f.func&&r.__fn!==f.func)return false;
+    if(f.evol&&!matchEvol(r,f.evol))return false;
+    if(f.search){const q=f.search;if(!(r.__n||'').toLowerCase().includes(q)&&!String(r[K.num_doc]||'').toLowerCase().includes(q))return false;}
+    for(const[d,v]of Object.entries(CF)){
+      if(d==='pt'&&r.__pt!==v)return false;if(d==='te'&&r.__te!==v)return false;
+      if(d==='sub'&&r.__s!==v)return false;if(d==='mun'&&r.__m!==v)return false;
+      if(d==='edad'&&r.__eg!==v)return false;if(d==='sexo'&&r.__sx!==v)return false;
+      if(d==='sem'&&r.__sem!==String(v))return false;if(d==='ori'&&r.__ori!==v)return false;
+      if(d==='tipo'&&r.__tl!==v)return false;
     }
     return true;
   });
 }
-
-function applyCF(dim,val){
-  if(CF[dim]===val)delete CF[dim]; else CF[dim]=val;
-  updateFilterBadge();updateActiveBar();render();
-}
-
-// ── TABS ──────────────────────────────────────────────
+function applyCF(d,v){if(CF[d]===v)delete CF[d];else CF[d]=v;updBadge();updAB();render();}
 function renderTabs(){
-  const counts={'':ALL_DATA.length,'1':0,'2':0,'3':0};
-  ALL_DATA.forEach(r=>{const t=r[KEYS.tipo]||'';if(counts[t]!==undefined)counts[t]++;});
-  const icons={'':'ti-users','1':'ti-baby-carriage','2':'ti-run','3':'ti-heart'};
-  const labels={'':'Total','1':'< 6 meses','2':'6-71 meses','3':'Gestante'};
-  document.getElementById('tipoTabs').innerHTML=['','1','2','3'].map(t=>`
-    <button class="tab${TIPO_FILTER===t?' active':''}" onclick="setTipoFilter('${t}')">
-      <i class="ti ${icons[t]}"></i> ${labels[t]} <span class="tab-count">${counts[t]}</span>
-    </button>`).join('');
+  const c={'':ALL.length,'1':0,'2':0,'3':0};
+  ALL.forEach(r=>{const t=r[K.tipo]||'';if(c[t]!==undefined)c[t]++;});
+  const ic={'':'ti-users','1':'ti-baby-carriage','2':'ti-run','3':'ti-heart'};
+  const lb={'':'Total','1':'< 6 meses','2':'6-71 meses','3':'Gestante'};
+  document.getElementById('tipoTabs').innerHTML=['','1','2','3'].map(t=>`<button class="tab${TF===t?' active':''}" onclick="setTF('${t}')"><i class="ti ${ic[t]}"></i> ${lb[t]} <span class="tab-count">${c[t]}</span></button>`).join('');
 }
-function setTipoFilter(t){TIPO_FILTER=t;CF={};PF.tipo=t;updateFilterBadge();updateActiveBar();renderTabs();render();}
+function setTF(t){TF=t;CF={};PF.tipo=t;updBadge();updAB();renderTabs();render();}
+function render(){const d=getFiltered();renderKPIs(d);renderTable(d);renderCharts(d);}
 
-// ── RENDER ───────────────────────────────────────────
-function render(){
-  const data=getFiltered();
-  renderKPIs(data);renderTable(data);renderCharts(data);
-}
-
-// ── KPIs ─────────────────────────────────────────────
 function renderKPIs(data){
-  const total=data.length||1;
-  const ptC=countBy(data,'__pt');const teC=countBy(data,'__te');
-  const dntSev=(ptC['Desnutrición aguda severa']||0)+(ptC['DNT Severa']||0)+(ptC['DNT severa']||0);
-  const dntMod=(ptC['Desnutrición aguda moderada']||0)+(ptC['DNT moderada']||0);
-  const risk  =(ptC['Riesgo de desnutrición aguda']||0)+(ptC['Riesgo DNT']||0);
-  const ok    =ptC['Peso adecuado para la talla']||0;
-  const ret   =teC['Retraso en talla']||0;
-  const sob   =(ptC['Riesgo de sobrepeso']||0)+(ptC['Sobrepeso']||0)+(ptC['Obesidad']||0);
-  const kpis=[
-    {label:'Total',value:data.length,color:'#05662F',pct:null},
-    {label:'DNT severa',value:dntSev,color:'#dc2626',pct:Math.round(dntSev/total*100)},
-    {label:'DNT moderada',value:dntMod,color:'#d97706',pct:Math.round(dntMod/total*100)},
-    {label:'Riesgo DNT',value:risk,color:'#f59e0b',pct:Math.round(risk/total*100)},
-    {label:'Peso adecuado',value:ok,color:'#16a34a',pct:Math.round(ok/total*100)},
-    {label:'Retraso talla',value:ret,color:'#7c3aed',pct:Math.round(ret/total*100)},
-    {label:'Sobrepeso/Ob.',value:sob,color:'#0891b2',pct:Math.round(sob/total*100)},
-  ];
-  document.getElementById('kpis').innerHTML=kpis.map(k=>`
-    <div class="kpi">
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-value" style="color:${k.color}">${k.value.toLocaleString()}</div>
-      ${k.pct!==null?`<div class="kpi-sub">${k.pct}% del total</div><div class="kpi-bar" style="width:${k.pct}%;color:${k.color}"></div>`:''}
-    </div>`).join('');
+  const tot=data.length||1;const ptC=cBy(data,'__pt');const teC=cBy(data,'__te');
+  const ds=(ptC['Desnutrición aguda severa']||0)+(ptC['DNT Severa']||0)+(ptC['DNT severa']||0);
+  const dm=(ptC['Desnutrición aguda moderada']||0)+(ptC['DNT moderada']||0);
+  const rk=(ptC['Riesgo de desnutrición aguda']||0)+(ptC['Riesgo DNT']||0);
+  const ok=ptC['Peso adecuado para la talla']||0;
+  const ret=teC['Retraso en talla']||0;
+  const sob=(ptC['Riesgo de sobrepeso']||0)+(ptC['Sobrepeso']||0)+(ptC['Obesidad']||0);
+  document.getElementById('kpis').innerHTML=[{l:'Total',v:data.length,c:'#05662F',p:null},{l:'DNT severa',v:ds,c:'#dc2626',p:Math.round(ds/tot*100)},{l:'DNT moderada',v:dm,c:'#d97706',p:Math.round(dm/tot*100)},{l:'Riesgo DNT',v:rk,c:'#f59e0b',p:Math.round(rk/tot*100)},{l:'Peso adecuado',v:ok,c:'#16a34a',p:Math.round(ok/tot*100)},{l:'Retraso talla',v:ret,c:'#7c3aed',p:Math.round(ret/tot*100)},{l:'Sobrepeso/Ob.',v:sob,c:'#0891b2',p:Math.round(sob/tot*100)}].map(k=>`<div class="kpi"><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v.toLocaleString()}</div>${k.p!==null?`<div class="kpi-sub">${k.p}%</div><div class="kpi-bar" style="width:${k.p}%;color:${k.c}"></div>`:''}</div>`).join('');
 }
 
-// ── TABLE ────────────────────────────────────────────
-const PAGE_SIZE=50;let currentPage=1,currentTableData=[];
-function renderTable(data){currentTableData=data;currentPage=1;document.getElementById('tableSubtitle').textContent=`(${data.length.toLocaleString()} registros)`;renderTablePage();}
-function renderTablePage(){
-  const total=currentTableData.length,totalPages=Math.max(1,Math.ceil(total/PAGE_SIZE));
-  currentPage=Math.min(currentPage,totalPages);
-  const start=(currentPage-1)*PAGE_SIZE,end=Math.min(start+PAGE_SIZE,total),slice=currentTableData.slice(start,end);
-  document.getElementById('tableCount').textContent=`Mostrando ${start+1}–${end} de ${total.toLocaleString()}`;
-  const isGest=TIPO_FILTER==='3';
-  document.getElementById('tableHead').innerHTML=isGest
-    ?'<tr><th>#Doc</th><th>Nombre</th><th>Municipio</th><th>Subregión</th><th>Edad</th><th>Sem. gestación</th><th>Clasif. IMC</th><th>Peso</th><th>Talla</th><th>Semana</th><th>Origen</th></tr>'
-    :'<tr><th>#Doc</th><th>Nombre</th><th>Municipio</th><th>Subregión</th><th>Edad</th><th>Sexo</th><th>Peso/Talla</th><th>Talla/Edad</th><th>Peso</th><th>Talla</th><th>PB</th><th>Semana</th><th>Origen</th></tr>';
-  document.getElementById('tableBody').innerHTML=slice.map(r=>{
-    const pt=r.__pt||'',te=r.__te||'—',sem=r.__semStr||'—';
-    const peso=r[KEYS.peso]?parseFloat(r[KEYS.peso]).toFixed(1):'—';
-    const talla=r[KEYS.estatura]?parseFloat(r[KEYS.estatura]).toFixed(1):'—';
-    const pb=r[KEYS.pb]?parseFloat(r[KEYS.pb]).toFixed(1):'—';
-    if(isGest)return`<tr><td style="font-family:monospace;font-size:10px">${r[KEYS.num_doc]||'—'}</td><td>${r.__nombre}</td><td>${r.__municipio}</td><td>${r.__subregion}</td><td>${r.__edadGrupo}</td><td>${r[KEYS.sem_gestacion]||'—'}</td><td>${getBadgePT(pt)}</td><td>${peso}</td><td>${talla}</td><td>S${sem}</td><td>${r.__origen}</td></tr>`;
-    return`<tr><td style="font-family:monospace;font-size:10px">${r[KEYS.num_doc]||'—'}</td><td>${r.__nombre}</td><td>${r.__municipio}</td><td>${r.__subregion}</td><td>${r.__edadGrupo}</td><td>${r.__sexLabel}</td><td>${getBadgePT(pt)}</td><td style="font-size:11px;color:#6b7280">${te}</td><td>${peso}</td><td>${talla}</td><td>${pb}</td><td>S${sem}</td><td>${r.__origen}</td></tr>`;
-  }).join('');
-  // Pagination
-  const pg=document.getElementById('pagination');
-  if(totalPages<=1){pg.innerHTML='';return;}
-  let html=`<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
-  const pages=[];if(totalPages<=7){for(let i=1;i<=totalPages;i++)pages.push(i);}
-  else{pages.push(1);if(currentPage>3)pages.push('…');for(let i=Math.max(2,currentPage-1);i<=Math.min(totalPages-1,currentPage+1);i++)pages.push(i);if(currentPage<totalPages-2)pages.push('…');pages.push(totalPages);}
-  pages.forEach(p=>{if(p==='…')html+=`<span style="font-size:12px;color:#9ca3af;padding:0 4px">…</span>`;else html+=`<button class="page-btn${p===currentPage?' active':''}" onclick="goPage(${p})">${p}</button>`;});
-  html+=`<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button><span class="page-info">Pág ${currentPage}/${totalPages}</span>`;
-  pg.innerHTML=html;
-}
-function goPage(p){const tp=Math.ceil(currentTableData.length/PAGE_SIZE);if(p<1||p>tp)return;currentPage=p;renderTablePage();}
-function getBadgePT(v){if(!v)return'<span class="badge b-nd">Sin dato</span>';const s=v.toLowerCase();if(s.includes('severa'))return`<span class="badge b-sev">${v}</span>`;if(s.includes('moderada'))return`<span class="badge b-mod">${v}</span>`;if(s.includes('riesgo'))return`<span class="badge b-risk">${v}</span>`;if(s.includes('adecuado'))return`<span class="badge b-ok">${v}</span>`;if(s.includes('sobrepeso')||s.includes('obesidad'))return`<span class="badge b-sob">${v}</span>`;return`<span class="badge b-nd">${v}</span>`;}
-
-// ── CHARTS ───────────────────────────────────────────
-function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
-const PT_COLORS={'Peso adecuado para la talla':'#16a34a','Riesgo de desnutrición aguda':'#f59e0b','Desnutrición aguda severa':'#dc2626','Desnutrición aguda moderada':'#d97706','Riesgo de sobrepeso':'#0891b2','DNT moderada':'#ea580c','Obesidad':'#0e7490','Sobrepeso':'#06b6d4','DNT severa':'#b91c1c','DNT Severa':'#b91c1c'};
-const TE_COLORS={'Retraso en talla':'#dc2626','Riesgo de talla baja':'#f59e0b','Talla adecuada para la edad':'#16a34a','Riesgo de talla baja para la edad':'#fbbf24'};
-const PAL=['#05662F','#1B7A3E','#d97706','#7c3aed','#dc2626','#0891b2','#16a34a','#f59e0b'];
-
-function donut(id,boxId,legId,entries,colorMap,dim){
-  destroyChart(id);
-  const labels=entries.map(e=>e[0]),data=entries.map(e=>e[1]);
-  const colors=labels.map((l,i)=>colorMap[l]||PAL[i%PAL.length]);
-  const total=data.reduce((a,b)=>a+b,0)||1;
-  const activeVal=CF[dim];
-  document.getElementById(boxId).classList.toggle('has-filter',!!activeVal);
-  document.getElementById(legId).innerHTML=labels.map((l,i)=>`<span onclick="applyCF('${dim}','${l.replace(/'/g,"\\'")}')"><span class="leg-sq" style="background:${colors[i]};${activeVal===l?'outline:2px solid #1e40af;outline-offset:1px':''}"></span>${l} ${Math.round(data[i]/total*100)}%</span>`).join('');
-  charts[id]=new Chart(document.getElementById(id),{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:labels.map(l=>activeVal===l?4:2),borderColor:labels.map(l=>activeVal===l?'#1e40af':'#fff')}]},options:{responsive:true,maintainAspectRatio:false,cutout:'52%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw} (${Math.round(ctx.raw/total*100)}%)`}}},onClick:(_,els)=>{if(els.length)applyCF(dim,labels[els[0].index]);}}});
+// ── TABLA ─────────────────────────────────────────────
+const PS=50;let cPage=1,cData=[],expId=null;
+function renderTable(data){cData=data;cPage=1;expId=null;document.getElementById('tableSubtitle').textContent=`(${data.length.toLocaleString()} registros)`;renderTP();}
+function renderTP(){
+  const tot=cData.length,tp=Math.max(1,Math.ceil(tot/PS));
+  cPage=Math.min(cPage,tp);
+  const st=(cPage-1)*PS,sl=cData.slice(st,st+PS);
+  document.getElementById('tableCount').textContent=`Mostrando ${st+1}–${Math.min(st+PS,tot)} de ${tot.toLocaleString()}`;
+  const iG=TF==='3';
+  const th=iG?'<th></th><th>#Doc</th><th>Nombre</th><th>Municipio</th><th>Subregión</th><th>Sem.gest.</th><th>Clasif. IMC</th><th>Peso</th><th>Talla</th><th>Sem.</th><th>Orig.</th><th>Historial</th>'
+             :'<th></th><th>#Doc</th><th>Nombre</th><th>Municipio</th><th>Subregión</th><th>Edad</th><th>Sexo</th><th>P/T</th><th>T/E</th><th>Peso</th><th>Talla</th><th>PB</th><th>Sem.</th><th>Orig.</th><th>Historial</th>';
+  document.getElementById('tableHead').innerHTML=`<tr>${th}</tr>`;
+  let html='';
+  sl.forEach((r,i)=>{
+    const rid=`r${st+i}`,pid=`p${st+i}`;
+    const tl=getTimeline(r);
+    const pills=mkPills(tl);
+    const cols=iG
+      ?`<td style="width:16px"><i class="ti ti-chevron-down xchev" id="c${rid}"></i></td><td style="font-family:monospace;font-size:10px">${r[K.num_doc]||''}</td><td>${r.__n}</td><td>${r.__m}</td><td>${r.__s}</td><td>${r[K.sem_gest]||'—'} sem.</td><td>${bdg(r.__pt)}</td><td>${fn(r[K.peso])||'—'}</td><td>${fn(r[K.talla])||'—'}</td><td>S${r.__sem}</td><td>${r.__ori}</td><td>${pills}</td>`
+      :`<td style="width:16px"><i class="ti ti-chevron-down xchev" id="c${rid}"></i></td><td style="font-family:monospace;font-size:10px">${r[K.num_doc]||''}</td><td>${r.__n}</td><td>${r.__m}</td><td>${r.__s}</td><td>${r.__eg}</td><td>${r.__sx}</td><td>${bdg(r.__pt)}</td><td style="font-size:11px;color:#6b7280">${r.__te}</td><td>${fn(r[K.peso])||'—'}</td><td>${fn(r[K.talla])||'—'}</td><td>${fn(r[K.pb])||'—'}</td><td>S${r.__sem}</td><td>${r.__ori}</td><td>${pills}</td>`;
+    const cs=iG?12:15;
+    html+=`<tr class="data-row" id="${rid}" onclick="toggleRow('${rid}','${pid}')">${cols}</tr>`;
+    html+=`<tr class="expand-row" id="er${rid}"><td colspan="${cs}" style="padding:0"><div class="xpanel" id="${pid}"><div class="xinner">${mkXPanel(tl,r)}</div></div></td></tr>`;
+  });
+  document.getElementById('tableBody').innerHTML=html;
+  renderPag(tp);
 }
 
-function barH(id,boxId,labels,data,color,dim){
-  destroyChart(id);
-  const activeVal=CF[dim];
-  document.getElementById(boxId).classList.toggle('has-filter',!!activeVal);
-  const colors=labels.map(l=>activeVal&&String(l)!==String(activeVal)?color+'55':color);
-  charts[id]=new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:[{data,backgroundColor:colors,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b7280',font:{size:10},maxRotation:30},grid:{display:false}},y:{ticks:{color:'#6b7280',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}}},onClick:(_,els)=>{if(els.length)applyCF(dim,String(labels[els[0].index]));}}});
+function mkPills(tl){
+  const c1=mainCls(tl.s1),c2=mainCls(tl.s2),c3=tl.s3?mainCls(tl.s3):null;
+  const a1=mkArr(tl.e12),a2=tl.s3?mkArr(tl.e23):`<span class="ha" style="opacity:.3">·</span>`;
+  const tip1=tl.s1.clas_pt||tl.s1.clas_imc||'—';
+  const tip2=tl.s2.clas_pt||tl.s2.clas_imc||'—';
+  const tip3=tl.s3?(tl.s3.clas_pt||tl.s3.clas_imc||'—'):'Pendiente';
+  const p1=`<div class="hp ${c1}" title="Seg 1: ${tip1}">${pLabel(c1)}</div>`;
+  const p2=`<div class="hp ${c2}" title="Seg 2: ${tip2}">${pLabel(c2)}</div>`;
+  const p3=tl.s3?`<div class="hp ${c3}" title="Seg 3: ${tip3}">${pLabel(c3)}</div>`:`<div class="hp ghost" title="Sin 3er seguimiento">—</div>`;
+  return`<div class="hpills">${p1}${a1}${p2}${a2}${p3}</div>`;
+}
+function mkArr(ev){if(!ev||ev==='nd')return`<span class="ha">›</span>`;if(ev==='mejor')return`<span class="ha m">↗</span>`;if(ev==='peor')return`<span class="ha p">↘</span>`;return`<span class="ha">→</span>`;}
+
+function ribTag(ev,label){
+  const cfg={
+    mejor:{cls:'rm',txt:'↗'},
+    peor: {cls:'rp',txt:'↘'},
+    igual:{cls:'ri',txt:'→'},
+    nd:   {cls:'rn',txt:'—'},
+  };
+  const c=cfg[ev]||cfg.nd;
+  return`<span class="rib ${c.cls}" style="padding:.15rem .4rem;font-size:10px;margin-right:3px">${c.txt} ${label}</span>`;
 }
 
+function mkXPanel(tl,r){
+  const tipo=r[K.tipo]||'2';
+  const b1=mkBlk(tl.s1,'1',null,tipo);
+  const b2=mkBlk(tl.s2,'2',tl.e12_pt,tipo);
+  const b3=tl.s3?mkBlk(tl.s3,'3',tl.e23_pt,tipo):ghostBlk();
+  const co1=mkConn(tl.e12_pt),co2=tl.s3?mkConn(tl.e23_pt):mkConn(null,true);
+  let ribHtml='';
+  if(tipo==='3'){
+    const rc={'mejor':'rm','igual':'ri','peor':'rp','nd':'rn'}[tl.e12]||'rn';
+    const rt={'mejor':'Mejoró','igual':'Sin cambio','peor':'Empeoró','nd':'S/D'}[tl.e12]||'—';
+    const e23txt=tl.s3?' · '+({'mejor':'Mejoró','igual':'Sin cambio','peor':'Empeoró','nd':'S/D'}[tl.e23]||'—')+' (Seg 2→3)':'';
+    ribHtml=`<div class="rib ${rc}" style="margin-top:.4rem"><i class="ti ti-heart" style="font-size:11px"></i> IMC: ${rt} (Seg 1→2)${e23txt}</div>`;
+  } else {
+    // Evolución = solo P/T (indicador principal DNT aguda según protocolo MANÁ/OMS)
+    // T/E y P/E se muestran como contexto pero no determinan la evolución
+    const rcMap={'mejor':'rm','igual':'ri','peor':'rp','nd':'rn'};
+    const rtMap={'mejor':'Mejoró','igual':'Sin cambio','peor':'Empeoró','nd':'S/D'};
+    const icoMap={'mejor':'ti-trending-up','igual':'ti-trending-neutral','peor':'ti-trending-down','nd':'ti-minus'};
+    const rc12=rcMap[tl.e12_pt]||'rn';
+    const rt12=rtMap[tl.e12_pt]||'S/D';
+    const ico12=icoMap[tl.e12_pt]||'ti-minus';
+    // T/E y P/E como contexto (sin pill coloreada de evolución, solo texto neutro)
+    const te12info=tl.e12_te!=='nd'?`<span style="font-size:9px;color:#6b7280;margin-left:6px">T/E: ${{'mejor':'↗','peor':'↘','igual':'→','nd':'—'}[tl.e12_te]||'—'}</span>`:'';
+    const pe12info=tl.e12_pe!=='nd'?`<span style="font-size:9px;color:#6b7280;margin-left:4px">P/E: ${{'mejor':'↗','peor':'↘','igual':'→','nd':'—'}[tl.e12_pe]||'—'}</span>`:'<span style="font-size:9px;color:#d1d5db;margin-left:4px">P/E sin ant.</span>';
+    // Seg 2→3
+    const seg23=tl.s3?`<span style="color:#6b7280;font-size:10px;font-weight:600;margin-left:10px">Seg 2→3:</span> <span class="rib ${rcMap[tl.e23_pt]||'rn'}" style="padding:.15rem .4rem;font-size:10px"><i class="ti ${icoMap[tl.e23_pt]||'ti-minus'}" style="font-size:10px"></i> ${rtMap[tl.e23_pt]||'S/D'} P/T</span>`:'';
+    ribHtml=`<div style="margin-top:.45rem;display:flex;flex-wrap:wrap;align-items:center;gap:2px">
+      <div class="rib ${rc12}" style="padding:.25rem .6rem"><i class="ti ${ico12}" style="font-size:11px"></i> ${rt12} (P/T · Seg 1→2)</div>${te12info}${pe12info}${seg23}
+    </div>`;
+  }
+  return`<div class="xtitle"><i class="ti ti-history"></i> Historial · ${r.__n}</div><div class="seg-row">${b1}${co1}${b2}${co2}${b3}</div>${ribHtml}`;
+}
+
+
+const NC={sev:'#dc2626',mod:'#d97706',risk:'#eab308',ok:'#16a34a',sob:'#0891b2',nd:'#9ca3af'};
+function mkBlk(seg,num,evol,tipo){
+  const cls=mainCls(seg);
+  const nc=NC[cls]||'#9ca3af';
+  const tIco=evol==='mejor'?' ↗':evol==='peor'?' ↘':'';
+  let body='';
+
+  if(tipo==='3'){
+    // ── GESTANTE ──
+    const siNo = v => v==='1'?'✅ Sí':v==='2'?'❌ No':v?v:'—';
+    if(num==='1'){
+      // SEG1 GESTANTE: edad anterior, peso ant, talla ant (fecha anterior vacía)
+      if(seg.edad) body+=sr('Edad ant.',seg.edad);
+      else         body+=sr('Fecha ant.','Sin fecha anterior');
+      body+=sr('Peso ant.',seg.peso?seg.peso+' kg':'—');
+      body+=sr('Talla ant.',seg.talla?seg.talla+' cm':'—');
+      body+=`<div style="font-size:8px;color:#b0b7c3;margin-top:4px;font-style:italic">Sin IMC ni sem. gestación en valoración anterior</div>`;
+    } else {
+      // SEG2/3 GESTANTE: datos completos
+      body+=sr('Fecha',seg.fecha||'—');
+      if(seg.edad) body+=sr('Edad',seg.edad);
+      body+=sr('Peso',seg.peso?seg.peso+' kg':'—');
+      body+=sr('Talla',seg.talla?seg.talla+' cm':'—');
+      if(seg.sem_gest!=null) body+=sr('Sem. gestación',seg.sem_gest+' sem.');
+      // IMC con su clasificación
+      if(seg.imc){
+        body+=`<div class="sz">IMC: <span style="font-weight:700">${seg.imc}</span></div>`;
+        body+=`<span class="sbadge b-${pcls(seg.clas_imc)}">${seg.clas_imc||'Sin clasif. IMC'}</span>`;
+      } else {
+        body+=`<span class="sbadge b-nd">Sin datos IMC</span>`;
+      }
+      // Controles prenatales
+      if(seg.vacuna_pren)    body+=sr('Vacuna prenatal', siNo(seg.vacuna_pren));
+      if(seg.controles_pren) body+=sr('Controles pren.', siNo(seg.controles_pren));
+      if(seg.fecha_ctrl_pren&&seg.fecha_ctrl_pren!=='—') body+=sr('Último control',seg.fecha_ctrl_pren);
+    }
+  } else {
+    // ── TIPO 1 (<6m) Y TIPO 2 (6-71m) ──
+    body+=sr('Fecha',seg.fecha||'—');
+    if(seg.edad_m!=null)body+=sr('Edad',seg.edad_m+' m');
+    body+=sr('Peso',seg.peso?seg.peso+' kg':'—');
+    body+=sr('Talla',seg.talla?seg.talla+' cm':'—');
+    if(tipo==='1'&&seg.pc)body+=sr('PC',seg.pc+' cm');
+    if(tipo==='2'&&seg.pb)body+=sr('PB',seg.pb+' cm');
+
+    if(num==='1'){
+      // SEG1: Z-PT y Z-TE (col72, col76). Z-PE anterior siempre vacío.
+      // Z P/T + su clasificación
+      body+=zr('Z P/T',seg.zPT);
+      body+=clar(seg.clas_pt,'P/T');
+      // Z T/E + su clasificación
+      body+=zr('Z T/E',seg.zTE);
+      body+=clar(seg.clas_te,'T/E');
+      // Z P/E no disponible en anterior
+      body+=`<div style="font-size:8px;color:#d1d5db;margin-top:3px;font-style:italic">Z P/E: no capturado en ant.</div>`;
+    } else {
+      // SEG2/3: Z-PT, Z-TE, Z-PE (cols 104, 106, 107)
+      // Z P/T + clasificación P/T
+      body+=zr('Z P/T',seg.zPT);
+      body+=clar(seg.clas_pt,'P/T');
+      // Z T/E + clasificación T/E (col177)
+      body+=zr('Z T/E',seg.zTE);
+      body+=clar(seg.clas_te,'T/E');
+      // Z P/E + clasificación P/E (col108)
+      body+=zr('Z P/E',seg.zPE);
+      body+=clar(seg.clas_pe,'P/E');
+      // Escolares: Z-TE IMC + clasif (cols 109-110) y Z-IMC/E + clasif (cols 111-112)
+      if(seg.zTE_imc||seg.clas_te_imc){
+        body+=zr('Z T/E IMC',seg.zTE_imc);
+        body+=clar(seg.clas_te_imc,'T/E IMC');
+      }
+      if(seg.zIMC||seg.clas_imc){
+        body+=zr('Z IMC/E',seg.zIMC);
+        body+=clar(seg.clas_imc,'IMC/E');
+      }
+    }
+  }
+  return`<div class="sblk"><div class="sblk-h"><div class="snum" style="background:${nc}">${num}</div><div class="sblk-t">Seg ${num}${tIco}</div></div>${body}</div>`;
+}
+
+function sr(k,v){return`<div class="srow"><span class="sk">${k}</span><span class="sv">${v}</span></div>`;}
+// Clasificación en texto debajo del Z (una línea por clasificación)
+function clar(v,label){
+  if(!v)return`<div style="font-size:9px;color:#d1d5db;margin-bottom:3px;padding-left:2px">Clasif. ${label}: —</div>`;
+  const cls=pcls(v);
+  const colors={sev:'#991b1b',mod:'#92400e',risk:'#854d0e',ok:'#166534',sob:'#1e40af',nd:'#6b7280'};
+  const c=colors[cls]||'#6b7280';
+  return`<div style="font-size:9px;color:${c};font-weight:600;margin-bottom:3px;padding-left:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${v}">↳ ${v}</div>`;
+}
+function zr(k,z){if(z==null)return'';const n=parseFloat(z);const col=n<=-3?'#991b1b':n<=-2?'#d97706':n<=-1?'#eab308':n>=2?'#0891b2':'#16a34a';return`<div class="sz">${k}: <span style="color:${col}">${z}</span></div>`;}
+function ghostBlk(){return`<div class="sblk ghost"><div class="sblk-h"><div class="snum" style="background:#d1d5db">3</div><div class="sblk-t">Seg 3</div></div><div style="font-size:9px;color:#9ca3af;text-align:center;padding:.4rem 0">Pendiente</div></div>`;}
+function mkConn(ev,ghost){const col=ev==='mejor'?'#16a34a':ev==='peor'?'#dc2626':'#d1d5db';const arr=ev==='mejor'?'↗':ev==='peor'?'↘':'→';return`<div class="sconn" style="opacity:${ghost?.38:1}"><div class="sline" style="background:${col}"></div><span class="sarr${ev==='mejor'?' m':ev==='peor'?' p':''}">${arr}</span><div class="sline" style="background:${col}"></div></div>`;}
+
+function toggleRow(rid,pid){
+  const panel=document.getElementById(pid);const row=document.getElementById(rid);const icon=document.getElementById('c'+rid);
+  const isOpen=panel.classList.contains('open');
+  if(expId&&expId!==rid){const pp=document.getElementById(expId.replace(/^r/,'p'));const pr=document.getElementById(expId);const pi=document.getElementById('c'+expId);if(pp)pp.classList.remove('open');if(pr)pr.classList.remove('expanded');if(pi)pi.style.transform='';}
+  if(isOpen){panel.classList.remove('open');row.classList.remove('expanded');if(icon)icon.style.transform='';expId=null;}
+  else{panel.classList.add('open');row.classList.add('expanded');if(icon)icon.style.transform='rotate(180deg)';expId=rid;}
+}
+function goPage(p){const tp=Math.ceil(cData.length/PS);if(p<1||p>tp)return;cPage=p;expId=null;renderTP();window.scrollTo({top:0,behavior:'smooth'});}
+function renderPag(tp){
+  const pg=document.getElementById('pagination');if(tp<=1){pg.innerHTML='';return;}
+  let h=`<button class="page-btn" onclick="goPage(${cPage-1})" ${cPage===1?'disabled':''}>‹</button>`;
+  const pages=[];if(tp<=7){for(let i=1;i<=tp;i++)pages.push(i);}else{pages.push(1);if(cPage>3)pages.push('…');for(let i=Math.max(2,cPage-1);i<=Math.min(tp-1,cPage+1);i++)pages.push(i);if(cPage<tp-2)pages.push('…');pages.push(tp);}
+  pages.forEach(p=>{if(p==='…')h+=`<span style="font-size:12px;color:#9ca3af;padding:0 4px">…</span>`;else h+=`<button class="page-btn${p===cPage?' active':''}" onclick="goPage(${p})">${p}</button>`;});
+  h+=`<button class="page-btn" onclick="goPage(${cPage+1})" ${cPage===tp?'disabled':''}>›</button><span class="page-info">Pág ${cPage}/${tp}</span>`;
+  pg.innerHTML=h;
+}
+function bdg(v){if(!v)return'<span class="badge b-nd">—</span>';const s=v.toLowerCase();if(s.includes('severa'))return`<span class="badge b-sev">${v}</span>`;if(s.includes('moderada')||s.includes('bajo peso'))return`<span class="badge b-mod">${v}</span>`;if(s.includes('riesgo'))return`<span class="badge b-risk">${v}</span>`;if(s.includes('adecuado')||s.includes('imc adecuado'))return`<span class="badge b-ok">${v}</span>`;if(s.includes('sobrepeso')||s.includes('obesidad'))return`<span class="badge b-sob">${v}</span>`;return`<span class="badge b-nd">${v}</span>`;}
+
+// ── GRÁFICAS ───────────────────────────────────────────
+function dChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+const PTC={'Peso adecuado para la talla':'#16a34a','Riesgo de desnutrición aguda':'#f59e0b','Desnutrición aguda severa':'#dc2626','Desnutrición aguda moderada':'#ea580c','Riesgo de sobrepeso':'#8b5cf6','DNT moderada':'#f97316','Obesidad':'#1d4ed8','Sobrepeso':'#7c3aed','DNT severa':'#b91c1c','DNT Severa':'#b91c1c'};
+const TEC={'Retraso en talla':'#dc2626','Riesgo de talla baja':'#f97316','Talla adecuada para la edad':'#16a34a','Riesgo de talla baja para la edad':'#fbbf24'};
+const PAL=['#0891b2','#7c3aed','#f97316','#dc2626','#16a34a','#e11d48','#0d9488','#8b5cf6','#ca8a04','#059669','#2563eb','#db2777'];
+function donut(id,bId,lId,ents,cmap,dim){dChart(id);const lb=ents.map(e=>e[0]),dt=ents.map(e=>e[1]),cs=lb.map((l,i)=>cmap[l]||PAL[i%PAL.length]),tot=dt.reduce((a,b)=>a+b,0)||1,av=CF[dim];document.getElementById(bId).classList.toggle('has-filter',!!av);document.getElementById(lId).innerHTML=lb.map((l,i)=>`<span onclick="applyCF('${dim}','${l.replace(/'/g,"\\'")}')"><span class="leg-sq" style="background:${cs[i]};${av===l?'outline:2px solid #1e40af;outline-offset:1px':''}"></span>${l} ${Math.round(dt[i]/tot*100)}%</span>`).join('');charts[id]=new Chart(document.getElementById(id),{type:'doughnut',data:{labels:lb,datasets:[{data:dt,backgroundColor:cs,borderWidth:lb.map(l=>av===l?4:2),borderColor:lb.map(l=>av===l?'#1e40af':'#fff')}]},options:{responsive:true,maintainAspectRatio:false,cutout:'52%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw} (${Math.round(ctx.raw/tot*100)}%)`}}},onClick:(_,els)=>{if(els.length)applyCF(dim,lb[els[0].index]);}}});}
+function barH(id,bId,lb,dt,color,dim){dChart(id);const av=CF[dim];document.getElementById(bId).classList.toggle('has-filter',!!av);const cs=lb.map(l=>av&&String(l)!==String(av)?color+'55':color);charts[id]=new Chart(document.getElementById(id),{type:'bar',data:{labels:lb,datasets:[{data:dt,backgroundColor:cs,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b7280',font:{size:10},maxRotation:30},grid:{display:false}},y:{ticks:{color:'#6b7280',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}}},onClick:(_,els)=>{if(els.length)applyCF(dim,String(lb[els[0].index]));}}});}
 function renderCharts(data){
-  const ptC=countBy(data,'__pt'),teC=countBy(data,'__te'),subC=countBy(data,'__subregion'),munC=countBy(data,'__municipio'),oriC=countBy(data,'__origen'),semC=countBy(data,'__semStr');
-  donut('cPT','box-pt','leg-pt',topN(ptC,9).filter(e=>e[0]&&e[0]!=='Dato desconocido'&&e[0]!==''),PT_COLORS,'pt');
-  donut('cTE','box-te','leg-te',topN(teC,5).filter(e=>e[0]&&e[0]!=='Dato desconocido'&&e[0]!==''),TE_COLORS,'te');
-  const subE=topN(subC,10).filter(e=>e[0]&&e[0]!=='—');
-  barH('cSub','box-sub',subE.map(e=>e[0]),subE.map(e=>e[1]),'#05662F','sub');
-  const munTop=topN(munC,15).filter(e=>e[0]&&e[0]!=='—'),maxMun=munTop[0]?munTop[0][1]:1,activeM=CF['mun']||null;
-  document.getElementById('munList').innerHTML=munTop.map(([m,n])=>`<div class="mun-row" onclick="applyCF('mun','${m.replace(/'/g,"\\'")}')"><span class="mun-name" style="${activeM===m?'color:#05662F;font-weight:600':''}">${m}</span><div class="mun-bar-wrap"><div class="mun-bar" style="width:${Math.round(n/maxMun*100)}%"></div></div><span class="mun-n">${n}</span></div>`).join('');
-  const eg={'0-5m':0,'6-11m':0,'12-23m':0,'24-35m':0,'36-47m':0,'48-71m':0};data.forEach(r=>{if(eg[r.__edadGrupo]!==undefined)eg[r.__edadGrupo]++;});
-  barH('cEdad','box-edad',Object.keys(eg),Object.values(eg),'#1B7A3E','edad');
-  const sexF=countBy(data,'__sexLabel'),sexE=Object.entries(sexF).filter(e=>e[0]&&e[0]!=='—'),sexColors=['#05662F','#f97316'],totSex=sexE.reduce((a,b)=>a+b[1],0)||1,activeSex=CF['sexo'];
-  document.getElementById('box-sex').classList.toggle('has-filter',!!activeSex);
-  document.getElementById('leg-sex').innerHTML=sexE.map((e,i)=>`<span onclick="applyCF('sexo','${e[0]}')"><span class="leg-sq" style="background:${sexColors[i%2]}"></span>${e[0]} ${Math.round(e[1]/totSex*100)}%</span>`).join('');
-  destroyChart('cSex');charts['cSex']=new Chart(document.getElementById('cSex'),{type:'doughnut',data:{labels:sexE.map(e=>e[0]),datasets:[{data:sexE.map(e=>e[1]),backgroundColor:sexE.map((_,i)=>sexColors[i%2]),borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'52%',plugins:{legend:{display:false}},onClick:(_,els)=>{if(els.length)applyCF('sexo',sexE[els[0].index][0]);}}});
-  const semS=Object.entries(semC).filter(([k])=>!isNaN(k)&&k!=='').sort((a,b)=>Number(a[0])-Number(b[0])),activeSem=CF['sem'];
-  document.getElementById('box-sem').classList.toggle('has-filter',!!activeSem);
-  destroyChart('cSem');charts['cSem']=new Chart(document.getElementById('cSem'),{type:'bar',data:{labels:semS.map(e=>'S'+e[0]),datasets:[{data:semS.map(e=>e[1]),backgroundColor:semS.map(e=>activeSem&&String(e[0])!==String(activeSem)?'#05662F44':'#7c3aed'),borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b7280',font:{size:9},maxTicksLimit:27},grid:{display:false}},y:{ticks:{color:'#6b7280',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}}},onClick:(_,els)=>{if(els.length)applyCF('sem',String(semS[els[0].index][0]));}}});
+  const ptC=cBy(data,'__pt'),teC=cBy(data,'__te'),subC=cBy(data,'__s'),munC=cBy(data,'__m'),oriC=cBy(data,'__ori'),semC=cBy(data,'__sem');
+  donut('cPT','box-pt','leg-pt',topN(ptC,9).filter(e=>e[0]&&e[0]!=='Dato desconocido'&&e[0]!==''),PTC,'pt');
+  donut('cTE','box-te','leg-te',topN(teC,5).filter(e=>e[0]&&e[0]!=='Dato desconocido'&&e[0]!==''),TEC,'te');
+  const sE=topN(subC,10).filter(e=>e[0]&&e[0]!=='—');barH('cSub','box-sub',sE.map(e=>e[0]),sE.map(e=>e[1]),'#0891b2','sub');
+  const mT=topN(munC,15).filter(e=>e[0]&&e[0]!=='—'),mM=mT[0]?mT[0][1]:1,aM=CF['mun']||null;
+  document.getElementById('munList').innerHTML=mT.map(([m,n])=>`<div class="mun-row" onclick="applyCF('mun','${m.replace(/'/g,"\\'")}')"><span class="mun-name" style="${aM===m?'color:#05662F;font-weight:600':''}">${m}</span><div class="mun-bar-wrap"><div class="mun-bar" style="width:${Math.round(n/mM*100)}%"></div></div><span class="mun-n">${n}</span></div>`).join('');
+  const eg={'0-5m':0,'6-11m':0,'12-23m':0,'24-35m':0,'36-47m':0,'48-71m':0};data.forEach(r=>{if(eg[r.__eg]!==undefined)eg[r.__eg]++;});barH('cEdad','box-edad',Object.keys(eg),Object.values(eg),'#0d9488','edad');
+  const sxF=cBy(data,'__sx'),sxE=Object.entries(sxF).filter(e=>e[0]&&e[0]!=='—'),sxC=['#05662F','#f97316'],totSx=sxE.reduce((a,b)=>a+b[1],0)||1,aSx=CF['sexo'];
+  document.getElementById('box-sex').classList.toggle('has-filter',!!aSx);
+  document.getElementById('leg-sex').innerHTML=sxE.map((e,i)=>`<span onclick="applyCF('sexo','${e[0]}')"><span class="leg-sq" style="background:${sxC[i%2]}"></span>${e[0]} ${Math.round(e[1]/totSx*100)}%</span>`).join('');
+  dChart('cSex');charts['cSex']=new Chart(document.getElementById('cSex'),{type:'doughnut',data:{labels:sxE.map(e=>e[0]),datasets:[{data:sxE.map(e=>e[1]),backgroundColor:sxE.map((_,i)=>sxC[i%2]),borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'52%',plugins:{legend:{display:false}},onClick:(_,els)=>{if(els.length)applyCF('sexo',sxE[els[0].index][0]);}}});
+  const smS=Object.entries(semC).filter(([k])=>!isNaN(k)&&k!=='').sort((a,b)=>Number(a[0])-Number(b[0])),aSm=CF['sem'];
+  document.getElementById('box-sem').classList.toggle('has-filter',!!aSm);
+  dChart('cSem');charts['cSem']=new Chart(document.getElementById('cSem'),{type:'bar',data:{labels:smS.map(e=>'S'+e[0]),datasets:[{data:smS.map(e=>e[1]),backgroundColor:smS.map(e=>aSm&&String(e[0])!==String(aSm)?'#05662F44':'#7c3aed'),borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#6b7280',font:{size:9},maxTicksLimit:27},grid:{display:false}},y:{ticks:{color:'#6b7280',font:{size:10}},grid:{color:'rgba(0,0,0,.05)'}}},onClick:(_,els)=>{if(els.length)applyCF('sem',String(smS[els[0].index][0]));}}});
   donut('cOri','box-ori','leg-ori',topN(oriC,6).filter(e=>e[0]),{},'ori');
-  const tipoF={};data.forEach(r=>{if(r.__tipoLabel)tipoF[r.__tipoLabel]=(tipoF[r.__tipoLabel]||0)+1;});
-  donut('cTipo','box-tipo','leg-tipo',Object.entries(tipoF),{},'tipo');
+  const tiF={};data.forEach(r=>{if(r.__tl)tiF[r.__tl]=(tiF[r.__tl]||0)+1;});
+  donut('cTipo','box-tipo','leg-tipo',Object.entries(tiF),{},'tipo');
 }
 
-// ── EXPORT ───────────────────────────────────────────
+// ── EXPORT ────────────────────────────────────────────
 function exportExcel(){
   const data=getFiltered();if(!data.length){alert('Sin datos.');return;}
-  if(typeof XLSX==='undefined'){alert('Librería Excel cargando…');return;}
-  const wb=XLSX.utils.book_new(),now=new Date().toLocaleString('es-CO'),total=data.length;
-  const ptC=countBy(data,'__pt'),teC=countBy(data,'__te'),subC=countBy(data,'__subregion'),munC=countBy(data,'__municipio'),oriC=countBy(data,'__origen'),semC=countBy(data,'__semStr');
-  const dntSev=(ptC['Desnutrición aguda severa']||0)+(ptC['DNT Severa']||0),dntMod=(ptC['Desnutrición aguda moderada']||0)+(ptC['DNT moderada']||0),riskDnt=(ptC['Riesgo de desnutrición aguda']||0)+(ptC['Riesgo DNT']||0),pesoOk=ptC['Peso adecuado para la talla']||0,retTalla=teC['Retraso en talla']||0;
-  // Sheet 1: Resumen
-  const res=[['SEGUIMIENTO NUTRICIONAL — ANTIOQUIA'],['Generado: '+now],['Total: '+total],[],['INDICADORES'],['Indicador','Cantidad','%'],['Total',total,'100%'],['DNT severa',dntSev,(dntSev/total*100).toFixed(1)+'%'],['DNT moderada',dntMod,(dntMod/total*100).toFixed(1)+'%'],['Riesgo DNT',riskDnt,(riskDnt/total*100).toFixed(1)+'%'],['Peso adecuado',pesoOk,(pesoOk/total*100).toFixed(1)+'%'],['Retraso talla',retTalla,(retTalla/total*100).toFixed(1)+'%'],[],['PT'],['Diagnóstico','N','%'],...Object.entries(ptC).filter(([k])=>k&&k!=='Dato desconocido').sort((a,b)=>b[1]-a[1]).map(([k,v])=>[k,v,(v/total*100).toFixed(1)+'%']),([]=[]),['TE'],['Diagnóstico','N','%'],...Object.entries(teC).filter(([k])=>k&&k!=='Dato desconocido').sort((a,b)=>b[1]-a[1]).map(([k,v])=>[k,v,(v/total*100).toFixed(1)+'%']),([]=[]),['SUBREGIÓN'],['Subregión','N','%'],...topN(subC,20).map(([k,v])=>[k,v,(v/total*100).toFixed(1)+'%']),([]=[]),['MUNICIPIO'],['Municipio','N','%'],...topN(munC,20).map(([k,v])=>[k,v,(v/total*100).toFixed(1)+'%'])];
-  const wsR=XLSX.utils.aoa_to_sheet(res);wsR['!cols']=[{wch:38},{wch:10},{wch:10}];XLSX.utils.book_append_sheet(wb,wsR,'Resumen');
-  // Sheet 2: Datos
-  const isGest=TIPO_FILTER==='3';
-  const hdr=isGest?['N° Doc','Nombre','Municipio','Subregión','Edad','Sem. gestación','Clasif. IMC gestacional','Peso','Talla','Semana','Origen','EPS','Funcionario']:['N° Doc','Nombre','Municipio','Subregión','Edad (texto)','Grupo edad','Sexo','Tipo','Clasif. P/T','Clasif. T/E','Peso kg','Talla cm','PB cm','Semana','Origen','EPS','Funcionario','Fecha visita','Observaciones'];
-  const rows=data.map(r=>isGest?[r[KEYS.num_doc]||'',r.__nombre,r.__municipio,r.__subregion,r[KEYS.edad_texto]||'',r[KEYS.sem_gestacion]||'',r.__pt,r[KEYS.peso]||'',r[KEYS.estatura]||'',r.__semStr,r.__origen,r.__eps,r.__func]:[r[KEYS.num_doc]||'',r.__nombre,r.__municipio,r.__subregion,r[KEYS.edad_texto]||'',r.__edadGrupo,r.__sexLabel,r.__tipoLabel,r.__pt,r.__te,r[KEYS.peso]||'',r[KEYS.estatura]||'',r[KEYS.pb]||'',r.__semStr,r.__origen,r.__eps,r.__func,r[KEYS.fecha_vis]?new Date(r[KEYS.fecha_vis]).toLocaleDateString('es-CO'):'',r[KEYS.obs]||'']);
-  const wsD=XLSX.utils.aoa_to_sheet([hdr,...rows]);wsD['!cols']=hdr.map((_,i)=>({wch:Math.min(Math.max(hdr[i].length,...rows.map(r=>String(r[i]||'').length))+2,42)}));wsD['!freeze']={xSplit:0,ySplit:1};XLSX.utils.book_append_sheet(wb,wsD,'Datos');
-  // Download
-  try{const fecha=new Date().toISOString().slice(0,10),nombre=`Nutricional_Antioquia_${fecha}.xlsx`,wbo=XLSX.write(wb,{bookType:'xlsx',type:'array'}),blob=new Blob([wbo],{type:'application/octet-stream'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=nombre;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);document.body.removeChild(a);},1000);}catch(e){alert('Error: '+e.message);}
+  if(typeof XLSX==='undefined'){alert('Librería cargando…');return;}
+  const wb=XLSX.utils.book_new();
+  const tot=data.length;const ptC=cBy(data,'__pt');const teC=cBy(data,'__te');
+  const ds=(ptC['Desnutrición aguda severa']||0)+(ptC['DNT Severa']||0);
+  const dm=(ptC['Desnutrición aguda moderada']||0)+(ptC['DNT moderada']||0);
+  const rk=(ptC['Riesgo de desnutrición aguda']||0)+(ptC['Riesgo DNT']||0);
+  const ok=ptC['Peso adecuado para la talla']||0;
+  const ret=teC['Retraso en talla']||0;
+  const res=[['SEGUIMIENTO NUTRICIONAL — ANTIOQUIA'],['Generado: '+new Date().toLocaleString('es-CO')],['Total: '+tot],[],['INDICADORES'],['Indicador','N','%'],['Total',tot,'100%'],['DNT severa',ds,(ds/tot*100).toFixed(1)+'%'],['DNT moderada',dm,(dm/tot*100).toFixed(1)+'%'],['Riesgo DNT',rk,(rk/tot*100).toFixed(1)+'%'],['Peso adecuado',ok,(ok/tot*100).toFixed(1)+'%'],['Retraso talla',ret,(ret/tot*100).toFixed(1)+'%']];
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(res),'Resumen');
+  const hdr=['N° Doc','Nombre','Municipio','Subregión','Edad m','Grupo edad','Sexo','Tipo','P/T actual','T/E actual','Peso act','Talla act','PB','Semana','Origen','EPS','Funcionario','Fecha visita','Seg1 Fecha','Seg1 Peso','Seg1 Talla','Seg1 Z-PT','Seg1 Clasif PT','Seg1 Z-TE','Seg1 Clasif TE','Seg2 Peso','Seg2 Talla','Seg2 Z-PT','Seg2 Clasif PT','Seg2 Z-TE','Seg2 Z-PE','Seg2 Clasif PE','Seg2 Clasif TE','Evolución 1→2','Seg3 Fecha','Seg3 Peso','Seg3 Talla','Seg3 Z-PT','Seg3 Clasif PT','Seg3 Z-TE','Seg3 Z-PE','Seg3 Clasif PE','Evolución 2→3'];
+  const rows=data.map(r=>{
+    const tl=getTimeline(r);const s1=tl.s1,s2=tl.s2,s3=tl.s3;
+    return[r[K.num_doc]||'',r.__n,r.__m,r.__s,r[K.edad_m]||'',r.__eg,r.__sx,r.__tl,r.__pt,r.__te,r[K.peso]||'',r[K.talla]||'',r[K.pb]||'',r.__sem,r.__ori,r.__eps,r.__fn,r[K.fecha_v]?new Date(r[K.fecha_v]).toLocaleDateString('es-CO'):'',
+      s1.fecha||'',s1.peso||'',s1.talla||'',s1.zPT||'',s1.clas_pt||'',s1.zTE||'',s1.clasif_te||'',
+      s2.peso||'',s2.talla||'',s2.zPT||'',s2.clas_pt||'',s2.zTE||'',s2.zPE||'',s2.clasif_pe||'',s2.clasif_te||'',tl.e12||'',
+      s3?s3.fecha||'':'',s3?s3.peso||'':'',s3?s3.talla||'':'',s3?s3.zPT||'':'',s3?s3.clas_pt||'':'',s3?s3.zTE||'':'',s3?s3.zPE||'':'',s3?s3.clasif_pe||'':'',tl.e23||''];
+  });
+  const wsD=XLSX.utils.aoa_to_sheet([hdr,...rows]);wsD['!freeze']={xSplit:0,ySplit:1};XLSX.utils.book_append_sheet(wb,wsD,'Datos');
+  try{const name='Nutricional_Antioquia_'+new Date().toISOString().slice(0,10)+'.xlsx';const wbo=XLSX.write(wb,{bookType:'xlsx',type:'array'});const blob=new Blob([wbo],{type:'application/octet-stream'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);document.body.removeChild(a);},1000);}catch(e){alert('Error: '+e.message);}
 }
-
-// ── DETECCIÓN DE IFRAME ───────────────────────────────
-function isInIframe(){
-  try{ return window.self !== window.top; }
-  catch(e){ return true; } // bloqueado por CORS = definitivamente en iframe
-}
-
-// ── DESCARGA INTELIGENTE ──────────────────────────────
-function handleExport(){
-  // Si por alguna razón estamos en iframe y llegamos aquí igual, redirigir
-  if(isInIframe()){
-    openInNewTab();
-    return;
-  }
-  exportExcel();
-}
-
-// ── ABRIR EN NUEVA PESTAÑA ────────────────────────────
-// Genera el Excel en memoria y lo abre en una nueva ventana independiente
-// donde el navegador SÍ permite la descarga (sin restricciones de iframe)
-function openInNewTab(){
-  // Primero intentar descarga directa con target=_blank como fallback simple
-  const directUrl = window.location.href.split('?')[0];
-
-  // Construir parámetros de filtro actuales en la URL para que la nueva pestaña
-  // abra con los mismos filtros y el usuario pueda descargar desde ahí
-  const params = new URLSearchParams();
-  if(TIPO_FILTER)   params.set('tipo', TIPO_FILTER);
-  if(PF.sub)        params.set('sub',  PF.sub);
-  if(PF.mun)        params.set('mun',  PF.mun);
-  if(PF.sem)        params.set('sem',  PF.sem);
-  if(PF.sexo)       params.set('sexo', PF.sexo);
-  if(PF.edad)       params.set('edad', PF.edad);
-  if(PF.pt)         params.set('pt',   PF.pt);
-  if(PF.te)         params.set('te',   PF.te);
-  if(PF.origen)     params.set('origen',PF.origen);
-  if(PF.eps)        params.set('eps',  PF.eps);
-  if(PF.func)       params.set('func', PF.func);
-  if(PF.search)     params.set('q',    PF.search);
-
-  // dl=1 como query param — NO usar hash (#) porque GitHub Pages/iframe
-  // lo interpreta como ancla interna y no fuerza navegación real
-  params.set('dl','1');
-  const qs = params.toString();
-  const url = directUrl + '?' + qs;
-
-  showExportModal(url, getFiltered().length);
-}
-
-// ── MODAL DE EXPORTACIÓN ─────────────────────────────
-function showExportModal(url, count){
-  // Crear modal dinámico
-  const existing = document.getElementById('exportModal');
-  if(existing) existing.remove();
-
-  const modal = document.createElement('div');
-  modal.id = 'exportModal';
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem';
-  modal.innerHTML = `
-    <div style="background:#fff;border-radius:16px;padding:1.75rem;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:fadeInUp .2s ease">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
-        <div style="background:#F0FDF4;border-radius:10px;padding:10px;flex-shrink:0">
-          <i class="ti ti-file-spreadsheet" style="font-size:24px;color:#05662F"></i>
-        </div>
-        <div>
-          <div style="font-size:15px;font-weight:700;color:#111827">Descargar Excel</div>
-          <div style="font-size:12px;color:#6b7280">${count.toLocaleString()} registros con los filtros actuales</div>
-        </div>
-      </div>
-
-      <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;padding:.85rem;margin-bottom:1rem;font-size:12px;color:#92400E;display:flex;gap:8px;align-items:flex-start">
-        <i class="ti ti-alert-triangle" style="font-size:16px;flex-shrink:0;margin-top:1px"></i>
-        <div>El dashboard está embebido en ArcGIS Experience Builder, lo que impide descargas directas desde iframe. <strong>Ábrelo en una pestaña nueva</strong> para poder descargar el Excel.</div>
-      </div>
-
-      <div style="font-size:12px;color:#374151;margin-bottom:1rem;line-height:1.6">
-        <strong>Pasos:</strong><br>
-        1. Clic en <strong>"Abrir en nueva pestaña"</strong><br>
-        2. El dashboard carga con tus filtros aplicados<br>
-        3. Clic en el botón <strong style="color:#16a34a">Excel</strong> para descargar
-      </div>
-
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button onclick="doOpenNewTab('${url}')"
-           style="flex:1;background:#05662F;color:#fff;border:none;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px">
-          <i class="ti ti-external-link"></i> Abrir en nueva pestaña
-        </button>
-        <button onclick="document.getElementById('exportModal').remove()"
-           style="background:#fff;color:#6b7280;border:1px solid #d1d5db;padding:9px 14px;border-radius:8px;font-size:13px;cursor:pointer">
-          Cancelar
-        </button>
-      </div>
-
-      <div style="margin-top:.85rem;padding-top:.85rem;border-top:1px solid #f3f4f6;font-size:11px;color:#9ca3af">
-        💡 También puedes intentar la <button onclick="tryDirectDownload()" style="background:none;border:none;color:#05662F;cursor:pointer;font-size:11px;text-decoration:underline;padding:0">descarga directa</button> — puede funcionar en algunos navegadores.
-      </div>
-    </div>`;
-
-  // Cerrar al hacer clic fuera
-  modal.addEventListener('click', e=>{ if(e.target===modal) modal.remove(); });
-  document.body.appendChild(modal);
-}
-
-function tryDirectDownload(){
-  document.getElementById('exportModal')?.remove();
-  exportExcel();
-}
-
-// Abre en nueva pestaña con múltiples métodos de fallback
-// para cubrir las diferentes restricciones de iframe de ArcGIS
-function doOpenNewTab(url){
-  document.getElementById('exportModal')?.remove();
-  // Método 1: window.open con _blank (funciona en la mayoría)
-  const w = window.open(url, '_blank', 'noopener,noreferrer');
-  if(w){ w.focus(); return; }
-  // Método 2: si window.open fue bloqueado (popup blocker), crear link y simular clic
-  const a = document.createElement('a');
-  a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
-  document.body.appendChild(a); a.click();
-  setTimeout(()=>document.body.removeChild(a), 500);
-  // Método 3: mostrar la URL para que el usuario la copie si todo falla
-  setTimeout(()=>{
-    if(document.hidden) return; // pestaña se abrió OK
-    showCopyUrlFallback(url);
-  }, 1500);
-}
-
-// Último recurso: mostrar URL para copiar manualmente
-function showCopyUrlFallback(url){
-  const existing = document.getElementById('copyUrlModal');
-  if(existing) return; // ya está visible
-  const modal = document.createElement('div');
-  modal.id = 'copyUrlModal';
-  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem';
-  modal.innerHTML=`
-    <div style="background:#fff;border-radius:14px;padding:1.5rem;max-width:480px;width:100%">
-      <div style="font-size:14px;font-weight:700;color:#111827;margin-bottom:.5rem">⚠️ Ventana bloqueada por el navegador</div>
-      <div style="font-size:12px;color:#6b7280;margin-bottom:1rem">Copia esta URL y ábrela en una pestaña nueva para descargar el Excel:</div>
-      <div style="display:flex;gap:6px">
-        <input id="copyUrlInput" value="${url}" readonly style="flex:1;font-size:11px;padding:6px 8px;border:1px solid #d1d5db;border-radius:6px;background:#f9fafb;color:#374151;font-family:monospace"/>
-        <button onclick="navigator.clipboard.writeText('${url}').then(()=>showToast('✅ URL copiada'));document.getElementById('copyUrlModal').remove()"
-          style="background:#05662F;color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer">Copiar</button>
-      </div>
-      <button onclick="document.getElementById('copyUrlModal').remove()" style="margin-top:.75rem;background:none;border:none;font-size:12px;color:#9ca3af;cursor:pointer">Cerrar</button>
-    </div>`;
-  modal.addEventListener('click',e=>{ if(e.target===modal) modal.remove(); });
-  document.body.appendChild(modal);
-}
-
-// Toast de notificación temporal
-function showToast(msg){
-  const t=document.createElement('div');
-  t.style.cssText='position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1f2937;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;z-index:99999;animation:fadeInUp .2s ease;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.25)';
-  t.textContent=msg;
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(), 3500);
-}
-
-// ── LEER FILTROS DESDE URL (para nueva pestaña) ───────
-function applyUrlParams(){
-  const params = new URLSearchParams(window.location.search);
-  let hasParams = false;
-  if(params.get('tipo')){   PF.tipo=params.get('tipo');   TIPO_FILTER=PF.tipo; hasParams=true; }
-  if(params.get('sub')){    PF.sub=params.get('sub');     hasParams=true; }
-  if(params.get('mun')){    PF.mun=params.get('mun');     hasParams=true; }
-  if(params.get('sem')){    PF.sem=params.get('sem');     hasParams=true; }
-  if(params.get('sexo')){   PF.sexo=params.get('sexo');   hasParams=true; }
-  if(params.get('edad')){   PF.edad=params.get('edad');   hasParams=true; }
-  if(params.get('pt')){     PF.pt=params.get('pt');       hasParams=true; }
-  if(params.get('te')){     PF.te=params.get('te');       hasParams=true; }
-  if(params.get('origen')){ PF.origen=params.get('origen');hasParams=true; }
-  if(params.get('eps')){    PF.eps=params.get('eps');     hasParams=true; }
-  if(params.get('func')){   PF.func=params.get('func');   hasParams=true; }
-  if(params.get('q')){      PF.search=params.get('q');    hasParams=true; }
-
-  // dl=1 → descarga automática al terminar de cargar datos
-  // Se lee AQUÍ pero se ejecuta al final de init() cuando ALL_DATA ya existe
-  if(params.get('dl')==='1'){
-    window._autoDownload = true;
-  }
-  return hasParams;
-}
-
+function isInIframe(){try{return window.self!==window.top;}catch(e){return true;}}
+function handleExport(){if(isInIframe()){openInNewTab();return;}exportExcel();}
+function openInNewTab(){const u=window.location.href.split('?')[0]+'?dl=1';const w=window.open(u,'_blank','noopener,noreferrer');if(w)w.focus();}
+function applyUrlParams(){if(new URLSearchParams(window.location.search).get('dl')==='1')window._autoDownload=true;}
 window.addEventListener('load',init);
 </script>
 </body>
