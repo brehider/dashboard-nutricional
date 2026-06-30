@@ -944,25 +944,101 @@ function renderCharts(data){
 }
 
 // ── EXPORT ────────────────────────────────────────────
+function filtrosActivosTexto(){
+  const partes=[];
+  if(TF) partes.push('Tipo: '+(TLB[TF]||TF));
+  Object.entries(PF).forEach(([k,v])=>{ if(v&&v!=='' && k!=='tipo') partes.push((PFL[k]||k)+': '+v); });
+  Object.entries(CF).forEach(([k,v])=>{
+    if(k==='kpi') partes.push('Indicador: '+(KPILBL[v]||v));
+    else partes.push(k+': '+v);
+  });
+  return partes.length?partes.join(' | '):'Sin filtros (todos los registros)';
+}
 function exportExcel(){
   const data=getFiltered();if(!data.length){alert('Sin datos.');return;}
   if(typeof XLSX==='undefined'){alert('Librería cargando…');return;}
   const wb=XLSX.utils.book_new();
   const tot=data.length;const ptC=cBy(data,'__pt');const teC=cBy(data,'__te');
-  const ds=(ptC['Desnutrición aguda severa']||0)+(ptC['DNT Severa']||0);
+  const ds=(ptC['Desnutrición aguda severa']||0)+(ptC['DNT Severa']||0)+(ptC['DNT severa']||0);
   const dm=(ptC['Desnutrición aguda moderada']||0)+(ptC['DNT moderada']||0);
   const rk=(ptC['Riesgo de desnutrición aguda']||0)+(ptC['Riesgo DNT']||0);
   const ok=ptC['Peso adecuado para la talla']||0;
   const ret=teC['Retraso en talla']||0;
-  const res=[['SEGUIMIENTO NUTRICIONAL — ANTIOQUIA'],['Generado: '+new Date().toLocaleString('es-CO')],['Total: '+tot],[],['INDICADORES'],['Indicador','N','%'],['Total',tot,'100%'],['DNT severa',ds,(ds/tot*100).toFixed(1)+'%'],['DNT moderada',dm,(dm/tot*100).toFixed(1)+'%'],['Riesgo DNT',rk,(rk/tot*100).toFixed(1)+'%'],['Peso adecuado',ok,(ok/tot*100).toFixed(1)+'%'],['Retraso talla',ret,(ret/tot*100).toFixed(1)+'%']];
+  const sob=(ptC['Riesgo de sobrepeso']||0)+(ptC['Sobrepeso']||0)+(ptC['Obesidad']||0);
+  const nN1=data.filter(r=>r[K.tipo]==='1').length;
+  const nN2=data.filter(r=>r[K.tipo]==='2').length;
+  const nG=data.filter(r=>r[K.tipo]==='3').length;
+  const res=[
+    ['SEGUIMIENTO NUTRICIONAL — ANTIOQUIA'],
+    ['Generado: '+new Date().toLocaleString('es-CO')],
+    ['Filtros aplicados: '+filtrosActivosTexto()],
+    ['Total registros exportados: '+tot],
+    ['  · < 6 meses: '+nN1],
+    ['  · 6-71 meses: '+nN2],
+    ['  · Gestantes: '+nG],
+    [],
+    ['INDICADORES (sobre los datos filtrados)'],
+    ['Indicador','N','%'],
+    ['Total',tot,'100%'],
+    ['DNT severa',ds,(ds/tot*100).toFixed(1)+'%'],
+    ['DNT moderada',dm,(dm/tot*100).toFixed(1)+'%'],
+    ['Riesgo DNT',rk,(rk/tot*100).toFixed(1)+'%'],
+    ['Peso adecuado',ok,(ok/tot*100).toFixed(1)+'%'],
+    ['Retraso talla',ret,(ret/tot*100).toFixed(1)+'%'],
+    ['Sobrepeso/Obesidad',sob,(sob/tot*100).toFixed(1)+'%'],
+  ];
   XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(res),'Resumen');
-  const hdr=['N° Doc','Nombre','Municipio','Subregión','Edad m','Grupo edad','Sexo','Tipo','P/T actual','T/E actual','Peso act','Talla act','PB','Semana','Origen','EPS','Funcionario','Fecha visita','Seg1 Fecha','Seg1 Peso','Seg1 Talla','Seg1 Z-PT','Seg1 Clasif PT','Seg1 Z-TE','Seg1 Clasif TE','Seg2 Peso','Seg2 Talla','Seg2 Z-PT','Seg2 Clasif PT','Seg2 Z-TE','Seg2 Z-PE','Seg2 Clasif PE','Seg2 Clasif TE','Evolución 1→2','Seg3 Fecha','Seg3 Peso','Seg3 Talla','Seg3 Z-PT','Seg3 Clasif PT','Seg3 Z-TE','Seg3 Z-PE','Seg3 Clasif PE','Evolución 2→3'];
+
+  const hdr=['N° Doc','Nombre','Municipio','Subregión','Edad m','Grupo edad','Sexo','Tipo',
+    'Clasif. P/T o IMC actual','T/E o Sem.Gestación actual','Peso act','Talla act','PB','Semana','Origen','EPS','Funcionario','Fecha visita',
+    // SEG1
+    'Seg1 Fecha','Seg1 Edad','Seg1 Peso','Seg1 Talla','Seg1 Z-PT','Seg1 Clasif PT','Seg1 Z-TE','Seg1 Clasif TE',
+    // SEG2
+    'Seg2 Edad','Seg2 Peso','Seg2 Talla','Seg2 Z-PT','Seg2 Clasif PT','Seg2 Z-TE','Seg2 Clasif TE','Seg2 Z-PE','Seg2 Clasif PE',
+    'Seg2 Sem.Gestación','Seg2 IMC','Seg2 Clasif IMC','Seg2 Vacuna Prenatal','Seg2 Controles Prenatales','Seg2 Fecha Último Control',
+    'Evolución 1→2',
+    // SEG3
+    'Seg3 Fecha','Seg3 Edad','Seg3 Peso','Seg3 Talla','Seg3 Z-PT','Seg3 Clasif PT','Seg3 Z-TE','Seg3 Clasif TE','Seg3 Z-PE','Seg3 Clasif PE',
+    'Seg3 Sem.Gestación','Seg3 IMC','Seg3 Clasif IMC','Seg3 Vacuna Prenatal','Seg3 Controles Prenatales','Seg3 Fecha Último Control',
+    'Evolución 2→3'];
+
+  const siNo = v => v==='1'?'Sí':v==='2'?'No':(v||'');
+
   const rows=data.map(r=>{
     const tl=getTimeline(r);const s1=tl.s1,s2=tl.s2,s3=tl.s3;
-    return[r[K.num_doc]||'',r.__n,r.__m,r.__s,r[K.edad_m]||'',r.__eg,r.__sx,r.__tl,r.__pt,r.__te,r[K.peso]||'',r[K.talla]||'',r[K.pb]||'',r.__sem,r.__ori,r.__eps,r.__fn,r[K.fecha_v]?new Date(r[K.fecha_v]).toLocaleDateString('es-CO'):'',
-      s1.fecha||'',s1.peso||'',s1.talla||'',s1.zPT||'',s1.clas_pt||'',s1.zTE||'',s1.clasif_te||'',
-      s2.peso||'',s2.talla||'',s2.zPT||'',s2.clas_pt||'',s2.zTE||'',s2.zPE||'',s2.clasif_pe||'',s2.clasif_te||'',tl.e12||'',
-      s3?s3.fecha||'':'',s3?s3.peso||'':'',s3?s3.talla||'':'',s3?s3.zPT||'':'',s3?s3.clas_pt||'':'',s3?s3.zTE||'':'',s3?s3.zPE||'':'',s3?s3.clasif_pe||'':'',tl.e23||''];
+    const esGest=(r[K.tipo]==='3');
+
+    const seg1Edad = esGest ? (s1.edad||'') : (s1.edad_m!=null?s1.edad_m+' m':'');
+    const seg2Edad = esGest ? (s2.edad||'') : (s2.edad_m!=null?s2.edad_m+' m':'');
+    const seg3Edad = s3 ? (esGest ? (s3.edad||'') : (s3.edad_m!=null?s3.edad_m+' m':'')) : '';
+
+    return[
+      r[K.num_doc]||'',r.__n,r.__m,r.__s,
+      esGest?'':(r[K.edad_m]||''), esGest?'':r.__eg,
+      r.__sx,r.__tl,r.__pt,r.__te,
+      r[K.peso]||'',r[K.talla]||'',r[K.pb]||'',r.__sem,r.__ori,r.__eps,r.__fn,
+      r[K.fecha_v]?new Date(r[K.fecha_v]).toLocaleDateString('es-CO'):'',
+      // SEG1
+      s1.fecha||'', seg1Edad, s1.peso||'', s1.talla||'',
+      esGest?'':(s1.zPT||''), esGest?'':(s1.clas_pt||''),
+      esGest?'':(s1.zTE||''), esGest?'':(s1.clas_te||''),
+      // SEG2
+      seg2Edad, s2.peso||'', s2.talla||'',
+      esGest?'':(s2.zPT||''), esGest?'':(s2.clas_pt||''),
+      esGest?'':(s2.zTE||''), esGest?'':(s2.clas_te||''),
+      esGest?'':(s2.zPE||''), esGest?'':(s2.clas_pe||''),
+      esGest?(s2.sem_gest||''):'', esGest?(s2.imc||''):'', esGest?(s2.clas_imc||''):'',
+      esGest?siNo(s2.vacuna_pren):'', esGest?siNo(s2.controles_pren):'', esGest?(s2.fecha_ctrl_pren||''):'',
+      tl.e12||'',
+      // SEG3
+      s3?s3.fecha||'':'', seg3Edad, s3?s3.peso||'':'', s3?s3.talla||'':'',
+      s3&&!esGest?(s3.zPT||''):'', s3&&!esGest?(s3.clas_pt||''):'',
+      s3&&!esGest?(s3.zTE||''):'', s3&&!esGest?(s3.clas_te||''):'',
+      s3&&!esGest?(s3.zPE||''):'', s3&&!esGest?(s3.clas_pe||''):'',
+      s3&&esGest?(s3.sem_gest||''):'', s3&&esGest?(s3.imc||''):'', s3&&esGest?(s3.clas_imc||''):'',
+      s3&&esGest?siNo(s3.vacuna_pren):'', s3&&esGest?siNo(s3.controles_pren):'', s3&&esGest?(s3.fecha_ctrl_pren||''):'',
+      s3?tl.e23||'':''
+    ];
   });
   const wsD=XLSX.utils.aoa_to_sheet([hdr,...rows]);wsD['!freeze']={xSplit:0,ySplit:1};XLSX.utils.book_append_sheet(wb,wsD,'Datos');
   try{const name='Nutricional_Antioquia_'+new Date().toISOString().slice(0,10)+'.xlsx';const wbo=XLSX.write(wb,{bookType:'xlsx',type:'array'});const blob=new Blob([wbo],{type:'application/octet-stream'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);document.body.removeChild(a);},1000);}catch(e){alert('Error: '+e.message);}
