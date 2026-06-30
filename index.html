@@ -167,6 +167,7 @@ tr.expand-row td{padding:0}
   <div class="topbar-right">
     <span class="topbar-meta" id="topMeta"></span>
     <button class="btn btn-filter-toggle" id="btnFilter" onclick="toggleFP()"><i class="ti ti-adjustments-horizontal"></i><span> Filtros</span><span class="filter-badge" id="filterBadge">0</span></button>
+    <button class="btn" id="btnExport" style="display:none;background:#16a34a;border-color:#16a34a" onclick="exportExcel()"><i class="ti ti-file-spreadsheet"></i><span> Excel</span></button>
     <button class="btn" id="btnRefresh" style="display:none" onclick="reload()"><i class="ti ti-refresh"><span> Actualizar</span></i></button>
   </div>
 </div>
@@ -620,6 +621,7 @@ async function init(){
     applyUrlParams();
     renderTabs();render();
     document.getElementById('btnRefresh').style.display='inline-flex';
+    if(!isInIframe()){document.getElementById('btnExport').style.display='inline-flex';}
     document.getElementById('topMeta').textContent=`${all.length.toLocaleString()} · ${new Date().toLocaleTimeString('es-CO')}`;
     show('dashScreen');
 
@@ -673,7 +675,22 @@ function updAB(){const bar=document.getElementById('activeBar');const te=documen
 function rmPF(k){PF[k]='';if(k==='tipo'){TF='';const sel=document.getElementById('fpTipo');if(sel)sel.value='';}updBadge();updAB();renderTabs();render();}
 function rmCF(k){delete CF[k];updBadge();updAB();render();}
 
-function getFiltered(pf){
+function dedupeByDoc(arr){
+  const byDoc={},noDoc=[];
+  arr.forEach(r=>{
+    const d=String(r[K.num_doc]||'').trim();
+    if(!d){noDoc.push(r);return;}
+    const cur=byDoc[d];
+    if(!cur||(toMs(r[K.fecha_v])||0)>(toMs(cur[K.fecha_v])||0)){byDoc[d]=r;}
+  });
+  return[...Object.values(byDoc),...noDoc];
+}
+function multiVisitCount(raw){
+  const byDoc={};
+  raw.forEach(r=>{const d=String(r[K.num_doc]||'').trim();if(d)byDoc[d]=(byDoc[d]||0)+1;});
+  return Object.values(byDoc).filter(c=>c>1).length;
+}
+function getFilteredRaw(pf){
   const f=pf||PF;
   return ALL.filter(r=>{
     if(TF&&r[K.tipo]!==TF)return false;
@@ -703,6 +720,9 @@ function getFiltered(pf){
     return true;
   });
 }
+function getFiltered(pf){
+  return dedupeByDoc(getFilteredRaw(pf));
+}
 function applyCF(d,v){if(CF[d]===v)delete CF[d];else CF[d]=v;updBadge();updAB();render();}
 const KPILBL={ds:'DNT severa',dm:'DNT moderada',rk:'Riesgo DNT',ok:'Peso adecuado',ret:'Retraso talla',sob:'Sobrepeso/Ob.'};
 function kpiMatch(r,group){
@@ -725,7 +745,7 @@ function renderTabs(){
   document.getElementById('tipoTabs').innerHTML=['','1','2','3'].map(t=>`<button class="tab${TF===t?' active':''}" onclick="setTF('${t}')"><i class="ti ${ic[t]}"></i> ${lb[t]} <span class="tab-count">${c[t]}</span></button>`).join('');
 }
 function setTF(t){TF=t;CF={};PF.tipo=t;const sel=document.getElementById('fpTipo');if(sel)sel.value=t;updBadge();updAB();renderTabs();render();}
-function render(){const d=getFiltered();renderKPIs(d);renderTable(d);renderCharts(d);}
+function render(){const raw=getFilteredRaw();const d=dedupeByDoc(raw);renderKPIs(d);renderTable(d,raw);renderCharts(d);}
 
 function renderKPIs(data){
   const tot=data.length||1;const ptC=cBy(data,'__pt');const teC=cBy(data,'__te');
@@ -741,7 +761,15 @@ function renderKPIs(data){
 
 // ── TABLA ─────────────────────────────────────────────
 const PS=50;let cPage=1,cData=[],expId=null;
-function renderTable(data){cData=data;cPage=1;expId=null;document.getElementById('tableSubtitle').textContent=`(${data.length.toLocaleString()} registros)`;renderTP();}
+function renderTable(data,raw){
+  cData=data;cPage=1;expId=null;
+  const mv=raw?multiVisitCount(raw):0;
+  const subt = mv>0
+    ? `(${data.length.toLocaleString()} personas · ${mv} con más de un seguimiento · ${(raw?raw.length:data.length).toLocaleString()} registros totales)`
+    : `(${data.length.toLocaleString()} registros)`;
+  document.getElementById('tableSubtitle').textContent=subt;
+  renderTP();
+}
 function renderTP(){
   const tot=cData.length,tp=Math.max(1,Math.ceil(tot/PS));
   cPage=Math.min(cPage,tp);
@@ -955,7 +983,9 @@ function filtrosActivosTexto(){
   return partes.length?partes.join(' | '):'Sin filtros (todos los registros)';
 }
 function exportExcel(){
-  const data=getFiltered();if(!data.length){alert('Sin datos.');return;}
+  const raw=getFilteredRaw();
+  const data=dedupeByDoc(raw);
+  if(!data.length){alert('Sin datos.');return;}
   if(typeof XLSX==='undefined'){alert('Librería cargando…');return;}
   const wb=XLSX.utils.book_new();
   const tot=data.length;const ptC=cBy(data,'__pt');const teC=cBy(data,'__te');
@@ -968,16 +998,23 @@ function exportExcel(){
   const nN1=data.filter(r=>r[K.tipo]==='1').length;
   const nN2=data.filter(r=>r[K.tipo]==='2').length;
   const nG=data.filter(r=>r[K.tipo]==='3').length;
+  const mv=multiVisitCount(raw);
   const res=[
     ['SEGUIMIENTO NUTRICIONAL — ANTIOQUIA'],
     ['Generado: '+new Date().toLocaleString('es-CO')],
     ['Filtros aplicados: '+filtrosActivosTexto()],
-    ['Total registros exportados: '+tot],
+    [],
+    ['Registros totales encontrados (incluye visitas repetidas): '+raw.length],
+    ['Personas únicas exportadas: '+tot],
+    ['  · Con un solo registro: '+(tot-mv)],
+    ['  · Con más de un seguimiento (varias visitas): '+mv],
+    ['  Nota: cada persona aparece UNA sola vez en la hoja "Datos", con su seguimiento más reciente como base y el historial completo (Seg1/Seg2/Seg3) en sus columnas.'],
+    [],
     ['  · < 6 meses: '+nN1],
     ['  · 6-71 meses: '+nN2],
     ['  · Gestantes: '+nG],
     [],
-    ['INDICADORES (sobre los datos filtrados)'],
+    ['INDICADORES (sobre las personas únicas filtradas)'],
     ['Indicador','N','%'],
     ['Total',tot,'100%'],
     ['DNT severa',ds,(ds/tot*100).toFixed(1)+'%'],
@@ -1043,6 +1080,7 @@ function exportExcel(){
   const wsD=XLSX.utils.aoa_to_sheet([hdr,...rows]);wsD['!freeze']={xSplit:0,ySplit:1};XLSX.utils.book_append_sheet(wb,wsD,'Datos');
   try{const name='Nutricional_Antioquia_'+new Date().toISOString().slice(0,10)+'.xlsx';const wbo=XLSX.write(wb,{bookType:'xlsx',type:'array'});const blob=new Blob([wbo],{type:'application/octet-stream'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);document.body.removeChild(a);},1000);}catch(e){alert('Error: '+e.message);}
 }
+function isInIframe(){try{return window.self!==window.top;}catch(e){return true;}}
 function applyUrlParams(){if(new URLSearchParams(window.location.search).get('dl')==='1')window._autoDownload=true;}
 window.addEventListener('load',init);
 </script>
