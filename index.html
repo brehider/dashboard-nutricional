@@ -153,7 +153,7 @@ tr.expand-row td{padding:0}
 .btn-retry{margin-top:1rem;display:inline-flex;align-items:center;gap:5px;font-size:13px;padding:7px 14px;border-radius:8px;cursor:pointer;border:1px solid #d1d5db;background:#fff;color:#374151}
 #dashScreen{display:none;padding:1rem 1.25rem 2rem}
 @media(max-width:768px){.topbar{padding:0 1rem}#dashScreen{padding:.75rem}.kpi-grid{grid-template-columns:repeat(3,1fr);gap:6px}.chart-row{grid-template-columns:1fr 1fr;gap:8px}.fp-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr);gap:5px}.kpi-value{font-size:18px}.chart-row{grid-template-columns:1fr}.chart-box.full{grid-column:1}.fp-grid{grid-template-columns:1fr}.tabs{flex-wrap:wrap}.tab{flex:1;min-width:calc(50% - 4px);justify-content:center;font-size:11px;padding:5px 6px}.tab-count{display:none}#btnExport{display:none!important}}
+@media(max-width:480px){.kpi-grid{grid-template-columns:repeat(2,1fr);gap:5px}.kpi-value{font-size:18px}.chart-row{grid-template-columns:1fr}.chart-box.full{grid-column:1}.fp-grid{grid-template-columns:1fr}.tabs{flex-wrap:wrap}.tab{flex:1;min-width:calc(50% - 4px);justify-content:center;font-size:11px;padding:5px 6px}.tab-count{display:none}}
 </style>
 </head>
 <body>
@@ -167,8 +167,6 @@ tr.expand-row td{padding:0}
   <div class="topbar-right">
     <span class="topbar-meta" id="topMeta"></span>
     <button class="btn btn-filter-toggle" id="btnFilter" onclick="toggleFP()"><i class="ti ti-adjustments-horizontal"></i><span> Filtros</span><span class="filter-badge" id="filterBadge">0</span></button>
-    <button class="btn" id="btnExport" style="display:none;background:#16a34a;border-color:#16a34a" onclick="handleExport()"><i class="ti ti-file-spreadsheet"></i><span> Excel</span></button>
-    <button class="btn" id="btnOpenTab" style="display:none;background:#0891b2;border-color:#0891b2" onclick="openInNewTab()"><i class="ti ti-external-link"></i><span> Abrir</span></button>
     <button class="btn" id="btnRefresh" style="display:none" onclick="reload()"><i class="ti ti-refresh"><span> Actualizar</span></i></button>
   </div>
 </div>
@@ -269,7 +267,6 @@ const MUNMAP={'05120':'Cáceres','05154':'Caucasia','05250':'El Bagre','05495':'
 
 function toTitle(s){
   if(!s)return'';
-  // Preposiciones y artículos que van en minúscula
   const lower=new Set(['de','del','la','las','los','el','y','e','i','o','u','van','von']);
   return s.toLowerCase().replace(/\S+/g,(w,i)=>lower.has(w)&&i>0?w:w.charAt(0).toUpperCase()+w.slice(1));
 }
@@ -281,39 +278,22 @@ function getPT(r){if(r[K.tipo]==='3')return cs(r[K.clas_imc_gest])||'—';const 
 function getTE(r){if(r[K.tipo]==='3'){const sg=r[K.sem_gest];return sg?`${sg} sem.`:'—';}const v=cs(r[K.clas_te]);if(v)return v;return cs(r[K.clas_te_ant])||'—';}
 function getEG(e){const n=parseInt(e||0);if(n<=5)return'0-5m';if(n<=11)return'6-11m';if(n<=23)return'12-23m';if(n<=35)return'24-35m';if(n<=47)return'36-47m';return'48-71m';}
 
-// ── DETECCIÓN DE CAMPOS POR ALIAS EXACTO ────────────
-// Mapa verificado contra Excel:
-// SEG1 anterior: col68=Fecha val.anterior, col69=Edad val.anterior,
-//   col70=Peso anterior Kg, col71=Estatura anterior cms,
-//   col72=Z-Peso/Talla[ANT], col75=Clasificación Peso/Talla[ANT],
-//   col76=Z-Talla/Edad[ANT], col79=Clasificación Talla/Edad[ANT]
-//   col80=Z-Peso/Edad anterior → SIEMPRE VACÍO, no se usa
-// SEG2/3 actual: col82=Peso Kg, col83=Estatura cms, col86=PB, col88=PC,
-//   col104=Z-Peso/Talla[ACT], col105=Clasificación Peso/Talla Actual,
-//   col106=Z-Talla/Edad[ACT], col107=Z-Peso/Edad[ACT],
-//   col108=Clasificación Peso/Edad Actual, col177=Clasificación Talla/Edad actual
-//   col109=Z-Talla/Edad IMC, col110=Clasif Talla/Edad IMC (escolares)
-//   col111=Z-IMC/E, col112=Clasif IMC/E (escolares)
-//   col114=IMC Gestante, col115=Clasif IMC/Edad gestacional (tipo3)
-
 function autoDetectFields(sample, fields) {
   const byAlias = {}, byName = {};
   fields.forEach(f => { if(f.alias)byAlias[f.alias.trim()]=f.name; byName[f.name]=f.name; });
   const ea = a => byAlias[a] || null;
   const pn = (...ps) => { for(const p of ps){const f=Object.keys(byName).find(n=>n.toLowerCase().includes(p.toLowerCase()));if(f)return f;}return null; };
-  // Para aliases duplicados (mismo texto, distinto fieldname): tomar el más corto=anterior, más largo=actual
   const shorter = alias => { const m=fields.filter(f=>f.alias&&f.alias.trim()===alias); if(!m.length)return null; return m.sort((a,b)=>a.name.length-b.name.length)[0].name; };
   const longer  = alias => { const m=fields.filter(f=>f.alias&&f.alias.trim()===alias); if(!m.length)return null; return m.sort((a,b)=>b.name.length-a.name.length)[0].name; };
   return {
-    // Demográficos
     origen:        pn('estado_nino') || 'estado_nino',
     sem:           pn('semana') || 'semana',
     tipo:          pn('tipo_participante') || 'tipo_participante',
     edad_m:        pn('edadMeses') || pn('edadmeses') || 'edadMeses',
     nom_siv:       pn('nom_ape_completos') || 'nom_ape_completos',
-    sex_siv:       'sexo',        // col14 SIV - fieldname directo (ea duplicado)
-    mun_siv:       'municipio',   // col21 SIV - fieldname directo (ea duplicado)
-    sub_siv:       'subregion',   // col22 SIV - fieldname directo (ea duplicado)
+    sex_siv:       'sexo',
+    mun_siv:       'municipio',
+    sub_siv:       'subregion',
     nom1:          pn('primer_nombre_nuevo') || 'primer_nombre_nuevo',
     nom2:          pn('segundo_nombre_nuevo') || 'segundo_nombre_nuevo',
     ape1:          pn('primer_apellido_nuevo') || 'primer_apellido_nuevo',
@@ -328,21 +308,14 @@ function autoDetectFields(sample, fields) {
     edad_txt:      pn('edad_texto') || 'edad_texto',
     obs:           pn('observaciones') || 'observaciones',
     fecha_v:       ea('Fecha valoración nutricional') || pn('fecha_visita') || 'fecha_visita',
-    // SEG 1: valoración ANTERIOR (cols 68-79)
     fecha_ant:     ea('Fecha valoración anterior')       || pn('fecha_valoracion_anterior'),
     edad_ant:      ea('Edad valoración anterior')        || pn('edad_valoracion_anterior'),
     peso_ant:      ea('Peso anterior Kg')                || pn('peso_anterior_kg') || pn('peso_anterior'),
     talla_ant:     ea('Estatura anterior cms')           || pn('estatura_anterior_cms') || pn('estatura_anterior'),
-    // col72 y col104 mismo alias "Z-Peso/Talla" → shorter=anterior(72), longer=actual(104)
     z_pt_ant:      shorter('Z-Peso/Talla')               || pn('z_pesotalla'),
-    // col75 alias "Clasificación Peso/Talla" ≠ col105 alias "Clasificación Peso/Talla Actual"
     clas_pt_ant:   ea('Clasificación Peso/Talla')        || pn('clasificacion_pesotalla'),
-    // col76 y col106 mismo alias "Z-Talla/Edad" → shorter=anterior(76), longer=actual(106)
     z_te_ant:      shorter('Z-Talla/Edad')               || pn('z_tallaedad'),
-    // col79 alias "Clasificación Talla/Edad" ≠ col177 alias "Clasificación Talla/Edad actual"
     clas_te_ant:   ea('Clasificación Talla/Edad')        || pn('clasificacion_tallaedad'),
-    // col80 Z-Peso/Edad anterior = SIEMPRE VACÍO → no se mapea
-    // SEG 2/3: valoración ACTUAL (cols 82-177)
     peso:          ea('Peso Kg')                         || pn('peso') || 'peso',
     talla:         ea('Estatura cms')                    || pn('estatura') || 'estatura',
     pb:            ea('Perímetro braquial cms')          || pn('perimetro_braquial') || 'perimetro_braquial',
@@ -353,22 +326,18 @@ function autoDetectFields(sample, fields) {
     z_pe:          ea('Z-Peso/Edad')                     || pn('z_pesoedad'),
     clas_pe:       ea('Clasificación Peso/Edad Actual')  || pn('clasificacion_pesoedad_actual'),
     clas_te:       ea('Clasificación Talla/Edad actual') || pn('clasificacion_tallaedadactual') || 'clasificacion_tallaedadactual',
-    // Escolares (tipo2 con ciertas edades, cols 109-112)
     z_te_imc:      ea('Z-Talla/Edad IMC')                || pn('z_tallaedad_imc'),
     clas_te_imc:   ea('Clasificación Talla/Edad IMC')    || pn('clasificacion_tallaedad_imc'),
     z_imc:         ea('Z-IMC/E')                         || pn('z_imc'),
     clas_imc:      ea('Clasificación IMC/E')              || pn('clasificacion_imc'),
-    // Gestante (tipo3, cols 114-115)
     imc_gest:      ea('IMC Gestante')                    || pn('imc_gestante'),
     clas_imc_gest: ea('Clasificación IMC/Edad gestacional') || pn('clasificacion_gestante_2') || 'clasificacion_gestante_2',
-    // Aliases para getPT/getTE del dashboard
     pt_ant_orig:   ea('Clasificación Peso/Talla')        || pn('clasificacion_pesotalla'),
     pt_orig:       ea('Clasificación Peso/Talla Actual') || pn('clasificacion_pesotalla_1') || 'clasificacion_pesotalla_1',
     te_ant_orig:   ea('Clasificación Talla/Edad')        || pn('clasificacion_tallaedad'),
     te_orig:       ea('Clasificación Talla/Edad actual') || pn('clasificacion_tallaedadactual') || 'clasificacion_tallaedadactual',
     gest_imc:      pn('clasificacion_gestante_2')        || 'clasificacion_gestante_2',
     sem_gest:      ea('Semanas de gestación')            || pn('semanas_gestacion') || 'semanas_gestacion',
-    // Gestante extra
     vacuna_prenatal: ea('¿Tiene completo el esquema de vacunación prenatal?') || pn('vacunacion_prenatal') || pn('esquema_vacunacion_prenatal'),
     controles_pren:  ea('¿Asiste a controles prenatales?') || pn('controles_prenatales') || pn('asiste_controles'),
     fecha_ctrl_pren: ea('Fecha último control prenatal') || pn('fecha_ultimo_control_prenatal') || pn('fecha_control_prenatal'),
@@ -376,7 +345,6 @@ function autoDetectFields(sample, fields) {
   };
 }
 
-// Fallback sin schema: detectar desde keys del primer registro
 function detectFromSample(sample) {
   const keys = Object.keys(sample);
   const fk = (...ps) => { for(const p of ps){const f=keys.find(k=>k.toLowerCase().includes(p.toLowerCase()));if(f)return f;}return null; };
@@ -442,7 +410,6 @@ function detectFromSample(sample) {
   };
 }
 
-// ── HISTORIAL ─────────────────────────────────────────
 function buildByDoc(data){
   BY_DOC={};
   data.forEach(r=>{
@@ -460,30 +427,23 @@ function getTimeline(r){
   let s1,s2,s3=null;
 
   if(tipo==='3'){
-    // ── GESTANTE ──────────────────────────────────────────
-    // SEG1: valoración ANTERIOR
-    // NOTA: col68 (Fecha valoración anterior) está VACÍA en gestantes
-    // col69=Edad anterior (texto), col70=Peso ant, col71=Talla ant
-    // No hay semanas de gestación ni IMC en el anterior
     s1={tipo,
-        fecha:          null,               // col68 vacía en gestantes
-        edad:           cs(old[K.edad_ant]),// col69 texto ej: "23 años 7 meses"
-        peso:           fn(old[K.peso_ant]),// col70
-        talla:          fn(old[K.talla_ant]),// col71
+        fecha:          null,
+        edad:           cs(old[K.edad_ant]),
+        peso:           fn(old[K.peso_ant]),
+        talla:          fn(old[K.talla_ant]),
         sem_gest:       null,
         imc:            null,
         clas_imc:       null,
-        // Sin Z-scores en gestante
     };
-    // SEG2: valoración ACTUAL del registro más antiguo
     s2={tipo,
         fecha:          fd(old[K.fecha_v]),
-        edad:           cs(old[K.edad_txt_gest]),// texto: "24 años 0 meses 16 días"
+        edad:           cs(old[K.edad_txt_gest]),
         peso:           fn(old[K.peso]),
         talla:          fn(old[K.talla]),
-        sem_gest:       old[K.sem_gest],    // col85
-        imc:            fn(old[K.imc_gest]),// col114
-        clas_imc:       cs(old[K.clas_imc_gest]),// col115
+        sem_gest:       old[K.sem_gest],
+        imc:            fn(old[K.imc_gest]),
+        clas_imc:       cs(old[K.clas_imc_gest]),
         vacuna_pren:    old[K.vacuna_prenatal],
         controles_pren: old[K.controles_pren],
         fecha_ctrl_pren:fd(old[K.fecha_ctrl_pren]),
@@ -503,27 +463,22 @@ function getTimeline(r){
       };
     }
   } else {
-    // ── TIPO 1 (<6m) Y TIPO 2 (6-71m) ─────────────────────
-    // SEG1: datos de la valoración ANTERIOR (cols 68-79 del registro más antiguo)
-    // NOTA: Z-Peso/Edad anterior (col80) SIEMPRE VACÍO → se omite
     s1={tipo,
         fecha:      fd(old[K.fecha_ant]),
         edad_m:     cs(old[K.edad_ant]),
         peso:       fn(old[K.peso_ant]),
         talla:      fn(old[K.talla_ant]),
-        pb:         null,   // PB anterior no capturado
-        pc:         null,   // PC anterior no capturado
+        pb:         null,
+        pc:         null,
         zPT:        fz(old[K.z_pt_ant]),
         clas_pt:    cs(old[K.clas_pt_ant]),
         zTE:        fz(old[K.z_te_ant]),
         clas_te:    cs(old[K.clas_te_ant]),
-        zPE:        null,   // col80 siempre vacío
+        zPE:        null,
         clas_pe:    null,
-        // Escolares: no aplica en anterior
         zTE_imc:    null, clas_te_imc: null,
         zIMC:       null, clas_imc:    null,
     };
-    // SEG2: datos de la valoración ACTUAL del registro más antiguo (cols 82-177)
     s2={tipo,
         fecha:      fd(old[K.fecha_v]),
         edad_m:     old[K.edad_m],
@@ -537,14 +492,12 @@ function getTimeline(r){
         clas_te:    cs(old[K.clas_te]),
         zPE:        fz(old[K.z_pe]),
         clas_pe:    cs(old[K.clas_pe]),
-        // Escolares (tipo2, cuando tienen estas columnas):
         zTE_imc:    fz(old[K.z_te_imc]),
         clas_te_imc:cs(old[K.clas_te_imc]),
         zIMC:       fz(old[K.z_imc]),
         clas_imc:   cs(old[K.clas_imc]),
     };
     if(recs.length>1){
-      // SEG3+: datos actuales del registro más reciente (mismas cols 82-177)
       s3={tipo,
           fecha:      fd(newest[K.fecha_v]),
           edad_m:     newest[K.edad_m],
@@ -566,34 +519,25 @@ function getTimeline(r){
     }
   }
 
-  // Evolución por cada indicador independiente
-  // e12/e23 = evolución de P/T (indicador principal DNT aguda, para pills y filtro)
-  // Las pills y el filtro usan P/T; el ribbon muestra los 3 desglosados
   if(tipo==='3'){
     const e12 = evolC(s1.clas_imc, s2.clas_imc);
     const e23 = s3 ? evolC(s2.clas_imc, s3.clas_imc) : null;
     return {s1,s2,s3,e12,e23,
-      // Gestante: solo IMC
       e12_pt:e12, e12_te:'nd', e12_pe:'nd',
       e23_pt:e23, e23_te:'nd', e23_pe:'nd'};
   } else {
-    // P/T: indicador principal (DNT aguda)
     const e12_pt = evolZ(s1.zPT, s2.zPT, s1.clas_pt, s2.clas_pt);
     const e23_pt = s3 ? evolZ(s2.zPT, s3.zPT, s2.clas_pt, s3.clas_pt) : null;
-    // T/E: indicador de cronicidad
     const e12_te = evolZ(s1.zTE, s2.zTE, s1.clas_te, s2.clas_te);
     const e23_te = s3 ? evolZ(s2.zTE, s3.zTE, s2.clas_te, s3.clas_te) : null;
-    // P/E: indicador combinado (sin dato anterior siempre → 'nd')
     const e12_pe = evolZ(s1.zPE, s2.zPE, s1.clas_pe, s2.clas_pe);
     const e23_pe = s3 ? evolZ(s2.zPE, s3.zPE, s2.clas_pe, s3.clas_pe) : null;
-    // e12/e23 = P/T para pills y filtro
     return {s1,s2,s3,
       e12:e12_pt, e23:e23_pt,
       e12_pt, e12_te, e12_pe,
       e23_pt, e23_te, e23_pe};
   }
   }catch(err){
-    // Fallback seguro si algo falla
     const nd={tipo:r[K.tipo]||'2',fecha:'—',peso:null,talla:null,clas_pt:null,clas_te:null,clas_pe:null,clas_imc:null,zPT:null,zTE:null,zPE:null,pb:null,pc:null,zTE_imc:null,clas_te_imc:null,zIMC:null,clas_imc:null,imc:null,sem_gest:null};
     return {s1:nd,s2:nd,s3:null,e12:'nd',e23:null,e12_pt:'nd',e12_te:'nd',e12_pe:'nd',e23_pt:null,e23_te:null,e23_pe:null};
   }
@@ -601,27 +545,18 @@ function getTimeline(r){
 
 function toMs(v){if(!v)return null;if(typeof v==='number')return v;return new Date(v).getTime()||null;}
 function sevPT(v){
-  // Escala: 0=severa(peor) 1=moderada 2=riesgo 3=sobrepeso/exceso 4=adecuado(mejor)
-  // Cubre P/T, T/E, P/E, IMC/E, T/E IMC
   if(!v)return-1;
   const s=v.toLowerCase().trim();
-  // Severo / peor
   if(s==='dnt severa'||s.includes('severa')||s==='delgadez'||s.includes('talla baja para la'))return 0;
-  // Moderado
   if(s==='dnt moderada'||s.includes('moderada')||s.includes('bajo peso')||s.includes('global')||s.includes('riesgo de delgadez')||s.includes('riesgo de retraso'))return 1;
-  // Riesgo
   if(s==='riesgo dnt'||s.includes('riesgo de desnutrición')||s.includes('riesgo dnt')||s.includes('riesgo de talla'))return 2;
-  // Adecuado / normal
   if(s.includes('adecuado')||s.includes('normal')||s.includes('talla adecuada'))return 4;
-  // Exceso (sobrepeso/obesidad)
   if(s.includes('riesgo de sobrepeso'))return 3;
   if(s==='sobrepeso'||s==='obesidad'||s.includes('sobrepeso')||s.includes('obesidad'))return 3;
-  // Sin dato
   if(s.includes('desconocido')||s.includes('sin dato'))return-1;
   return-1;
 }
 function evolZ(z1,z2,c1,c2){
-  // Clasificación PRIMERO (más confiable). Z como desempate dentro de misma categoría.
   const a=sevPT(c1),b=sevPT(c2);
   if(a>=0&&b>=0){
     if(b>a)return'mejor';
@@ -653,7 +588,6 @@ function matchEvol(r,ef){
 async function init(){
   show('loadingScreen');ld('Conectando con ArcGIS...','Consultando Feature Layer');
   try{
-    // Obtener schema para auto-detección de campos
     const schemaResp = await fetch(`${SVC}?f=json`).catch(()=>{throw new Error('Sin conexión a ArcGIS.');});
     const schema = await schemaResp.json();
     if(schema.error)throw new Error('La capa requiere autenticación.');
@@ -673,7 +607,6 @@ async function init(){
     }
     if(!all.length)throw new Error('Sin datos.');
     ALL=all;
-    // Auto-detectar campos: primero desde schema, luego desde sample
     if(fields.length>0){
       K=autoDetectFields(all[0], fields);
     } else {
@@ -687,10 +620,17 @@ async function init(){
     applyUrlParams();
     renderTabs();render();
     document.getElementById('btnRefresh').style.display='inline-flex';
-  document.getElementById('btnExport').style.display='inline-flex';
     document.getElementById('topMeta').textContent=`${all.length.toLocaleString()} · ${new Date().toLocaleTimeString('es-CO')}`;
     show('dashScreen');
-    if(window._autoDownload){window._autoDownload=false;setTimeout(()=>exportExcel(),600);}
+
+    if(window._autoDownload){
+      window._autoDownload=false;
+      document.getElementById('dashScreen').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:12px"><div class="spinner"></div><div style="font-size:15px;font-weight:600;color:#05662F">Generando tu Excel…</div><div style="font-size:12px;color:#9ca3af">Esta ventana se cerrará automáticamente</div></div>';
+      setTimeout(()=>{
+        exportExcel();
+        setTimeout(()=>{ window.close(); }, 1500);
+      }, 600);
+    }
   }catch(e){document.getElementById('errMsg').textContent=e.message||'Error';show('errorScreen');}
 }
 async function reload(){ALL=[];BY_DOC={};await init();}
@@ -849,18 +789,14 @@ function mkXPanel(tl,r){
     const e23txt=tl.s3?' · '+({'mejor':'Mejoró','igual':'Sin cambio','peor':'Empeoró','nd':'S/D'}[tl.e23]||'—')+' (Seg 2→3)':'';
     ribHtml=`<div class="rib ${rc}" style="margin-top:.4rem"><i class="ti ti-heart" style="font-size:11px"></i> IMC: ${rt} (Seg 1→2)${e23txt}</div>`;
   } else {
-    // Evolución = solo P/T (indicador principal DNT aguda según protocolo MANÁ/OMS)
-    // T/E y P/E se muestran como contexto pero no determinan la evolución
     const rcMap={'mejor':'rm','igual':'ri','peor':'rp','nd':'rn'};
     const rtMap={'mejor':'Mejoró','igual':'Sin cambio','peor':'Empeoró','nd':'S/D'};
     const icoMap={'mejor':'ti-trending-up','igual':'ti-trending-neutral','peor':'ti-trending-down','nd':'ti-minus'};
     const rc12=rcMap[tl.e12_pt]||'rn';
     const rt12=rtMap[tl.e12_pt]||'S/D';
     const ico12=icoMap[tl.e12_pt]||'ti-minus';
-    // T/E y P/E como contexto (sin pill coloreada de evolución, solo texto neutro)
     const te12info=tl.e12_te!=='nd'?`<span style="font-size:9px;color:#6b7280;margin-left:6px">T/E: ${{'mejor':'↗','peor':'↘','igual':'→','nd':'—'}[tl.e12_te]||'—'}</span>`:'';
     const pe12info=tl.e12_pe!=='nd'?`<span style="font-size:9px;color:#6b7280;margin-left:4px">P/E: ${{'mejor':'↗','peor':'↘','igual':'→','nd':'—'}[tl.e12_pe]||'—'}</span>`:'<span style="font-size:9px;color:#d1d5db;margin-left:4px">P/E sin ant.</span>';
-    // Seg 2→3
     const seg23=tl.s3?`<span style="color:#6b7280;font-size:10px;font-weight:600;margin-left:10px">Seg 2→3:</span> <span class="rib ${rcMap[tl.e23_pt]||'rn'}" style="padding:.15rem .4rem;font-size:10px"><i class="ti ${icoMap[tl.e23_pt]||'ti-minus'}" style="font-size:10px"></i> ${rtMap[tl.e23_pt]||'S/D'} P/T</span>`:'';
     ribHtml=`<div style="margin-top:.45rem;display:flex;flex-wrap:wrap;align-items:center;gap:2px">
       <div class="rib ${rc12}" style="padding:.25rem .6rem"><i class="ti ${ico12}" style="font-size:11px"></i> ${rt12} (P/T · Seg 1→2)</div>${te12info}${pe12info}${seg23}
@@ -878,36 +814,30 @@ function mkBlk(seg,num,evol,tipo){
   let body='';
 
   if(tipo==='3'){
-    // ── GESTANTE ──
     const siNo = v => v==='1'?'✅ Sí':v==='2'?'❌ No':v?v:'—';
     if(num==='1'){
-      // SEG1 GESTANTE: edad anterior, peso ant, talla ant (fecha anterior vacía)
       if(seg.edad) body+=sr('Edad ant.',seg.edad);
       else         body+=sr('Fecha ant.','Sin fecha anterior');
       body+=sr('Peso ant.',seg.peso?seg.peso+' kg':'—');
       body+=sr('Talla ant.',seg.talla?seg.talla+' cm':'—');
       body+=`<div style="font-size:8px;color:#b0b7c3;margin-top:4px;font-style:italic">Sin IMC ni sem. gestación en valoración anterior</div>`;
     } else {
-      // SEG2/3 GESTANTE: datos completos
       body+=sr('Fecha',seg.fecha||'—');
       if(seg.edad) body+=sr('Edad',seg.edad);
       body+=sr('Peso',seg.peso?seg.peso+' kg':'—');
       body+=sr('Talla',seg.talla?seg.talla+' cm':'—');
       if(seg.sem_gest!=null) body+=sr('Sem. gestación',seg.sem_gest+' sem.');
-      // IMC con su clasificación
       if(seg.imc){
         body+=`<div class="sz">IMC: <span style="font-weight:700">${seg.imc}</span></div>`;
         body+=`<span class="sbadge b-${pcls(seg.clas_imc)}">${seg.clas_imc||'Sin clasif. IMC'}</span>`;
       } else {
         body+=`<span class="sbadge b-nd">Sin datos IMC</span>`;
       }
-      // Controles prenatales
       if(seg.vacuna_pren)    body+=sr('Vacuna prenatal', siNo(seg.vacuna_pren));
       if(seg.controles_pren) body+=sr('Controles pren.', siNo(seg.controles_pren));
       if(seg.fecha_ctrl_pren&&seg.fecha_ctrl_pren!=='—') body+=sr('Último control',seg.fecha_ctrl_pren);
     }
   } else {
-    // ── TIPO 1 (<6m) Y TIPO 2 (6-71m) ──
     body+=sr('Fecha',seg.fecha||'—');
     if(seg.edad_m!=null)body+=sr('Edad',seg.edad_m+' m');
     body+=sr('Peso',seg.peso?seg.peso+' kg':'—');
@@ -916,27 +846,18 @@ function mkBlk(seg,num,evol,tipo){
     if(tipo==='2'&&seg.pb)body+=sr('PB',seg.pb+' cm');
 
     if(num==='1'){
-      // SEG1: Z-PT y Z-TE (col72, col76). Z-PE anterior siempre vacío.
-      // Z P/T + su clasificación
       body+=zr('Z P/T',seg.zPT);
       body+=clar(seg.clas_pt,'P/T');
-      // Z T/E + su clasificación
       body+=zr('Z T/E',seg.zTE);
       body+=clar(seg.clas_te,'T/E');
-      // Z P/E no disponible en anterior
       body+=`<div style="font-size:8px;color:#d1d5db;margin-top:3px;font-style:italic">Z P/E: no capturado en ant.</div>`;
     } else {
-      // SEG2/3: Z-PT, Z-TE, Z-PE (cols 104, 106, 107)
-      // Z P/T + clasificación P/T
       body+=zr('Z P/T',seg.zPT);
       body+=clar(seg.clas_pt,'P/T');
-      // Z T/E + clasificación T/E (col177)
       body+=zr('Z T/E',seg.zTE);
       body+=clar(seg.clas_te,'T/E');
-      // Z P/E + clasificación P/E (col108)
       body+=zr('Z P/E',seg.zPE);
       body+=clar(seg.clas_pe,'P/E');
-      // Escolares: Z-TE IMC + clasif (cols 109-110) y Z-IMC/E + clasif (cols 111-112)
       if(seg.zTE_imc||seg.clas_te_imc){
         body+=zr('Z T/E IMC',seg.zTE_imc);
         body+=clar(seg.clas_te_imc,'T/E IMC');
@@ -951,7 +872,6 @@ function mkBlk(seg,num,evol,tipo){
 }
 
 function sr(k,v){return`<div class="srow"><span class="sk">${k}</span><span class="sv">${v}</span></div>`;}
-// Clasificación en texto debajo del Z (una línea por clasificación)
 function clar(v,label){
   if(!v)return`<div style="font-size:9px;color:#d1d5db;margin-bottom:3px;padding-left:2px">Clasif. ${label}: —</div>`;
   const cls=pcls(v);
@@ -1032,8 +952,6 @@ function exportExcel(){
   const wsD=XLSX.utils.aoa_to_sheet([hdr,...rows]);wsD['!freeze']={xSplit:0,ySplit:1};XLSX.utils.book_append_sheet(wb,wsD,'Datos');
   try{const name='Nutricional_Antioquia_'+new Date().toISOString().slice(0,10)+'.xlsx';const wbo=XLSX.write(wb,{bookType:'xlsx',type:'array'});const blob=new Blob([wbo],{type:'application/octet-stream'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);document.body.removeChild(a);},1000);}catch(e){alert('Error: '+e.message);}
 }
-function isInIframe(){try{return window.self!==window.top;}catch(e){return true;}}
-function handleExport(){exportExcel();}
 function applyUrlParams(){if(new URLSearchParams(window.location.search).get('dl')==='1')window._autoDownload=true;}
 window.addEventListener('load',init);
 </script>
