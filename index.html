@@ -669,8 +669,8 @@ function applyPF(){PF=getPFI();CF={};TF=PF.tipo;updBadge();updAB();renderTabs();
 function resetPF(){PF={search:'',sub:'',mun:'',sem:'',tipo:'',sexo:'',edad:'',pt:'',te:'',origen:'',eps:'',func:'',evol:'',fechaDesde:'',fechaHasta:''};CF={};TF='';['fpSearch','fpSub','fpMun','fpSem','fpTipo','fpSexo','fpEdad','fpPT','fpTE','fpOrigen','fpEps','fpFunc','fpEvol','fpFechaDesde','fpFechaHasta'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});updBadge();updAB();renderTabs();render();if(fpOpen)toggleFP();}
 const PFL={search:'Búsqueda',sub:'Subregión',mun:'Municipio',sem:'Semana',tipo:'Tipo',sexo:'Sexo',edad:'Edad',pt:'P/T',te:'T/E',origen:'Origen',eps:'EPS',func:'Funcionario',evol:'Evolución',fechaDesde:'Fecha desde',fechaHasta:'Fecha hasta'};
 const TLB={'1':'< 6 m','2':'6–71 m','3':'Gestante'};
-function updAB(){const bar=document.getElementById('activeBar');const te=document.getElementById('activeBarTags');const ents=Object.entries(PF).filter(([,v])=>v&&v!=='');const ce=Object.entries(CF);if(!ents.length&&!ce.length){bar.classList.remove('show');return;}bar.classList.add('show');te.innerHTML=ents.map(([k,v])=>{const l=k==='tipo'?(TLB[v]||v):v;return`<span class="fp-tag">${PFL[k]||k}: <b>${l}</b> <i class="ti ti-x" onclick="rmPF('${k}')"></i></span>`;}).join('')+ce.map(([k,v])=>`<span class="fp-tag" style="background:#EEF2FF;border-color:#C7D2FE;color:#3730a3">${k}: <b>${v}</b> <i class="ti ti-x" onclick="rmCF('${k}')"></i></span>`).join('');}
-function rmPF(k){PF[k]='';if(k==='tipo')TF='';updBadge();updAB();renderTabs();render();}
+function updAB(){const bar=document.getElementById('activeBar');const te=document.getElementById('activeBarTags');const ents=Object.entries(PF).filter(([,v])=>v&&v!=='');const ce=Object.entries(CF);if(!ents.length&&!ce.length){bar.classList.remove('show');return;}bar.classList.add('show');te.innerHTML=ents.map(([k,v])=>{const l=k==='tipo'?(TLB[v]||v):v;return`<span class="fp-tag">${PFL[k]||k}: <b>${l}</b> <i class="ti ti-x" onclick="rmPF('${k}')"></i></span>`;}).join('')+ce.map(([k,v])=>{const lbl=k==='kpi'?'Indicador':k;const val=k==='kpi'?(KPILBL[v]||v):v;return`<span class="fp-tag" style="background:#EEF2FF;border-color:#C7D2FE;color:#3730a3">${lbl}: <b>${val}</b> <i class="ti ti-x" onclick="rmCF('${k}')"></i></span>`;}).join('');}
+function rmPF(k){PF[k]='';if(k==='tipo'){TF='';const sel=document.getElementById('fpTipo');if(sel)sel.value='';}updBadge();updAB();renderTabs();render();}
 function rmCF(k){delete CF[k];updBadge();updAB();render();}
 
 function getFiltered(pf){
@@ -698,11 +698,25 @@ function getFiltered(pf){
       if(d==='edad'&&r.__eg!==v)return false;if(d==='sexo'&&r.__sx!==v)return false;
       if(d==='sem'&&r.__sem!==String(v))return false;if(d==='ori'&&r.__ori!==v)return false;
       if(d==='tipo'&&r.__tl!==v)return false;
+      if(d==='kpi'&&!kpiMatch(r,v))return false;
     }
     return true;
   });
 }
 function applyCF(d,v){if(CF[d]===v)delete CF[d];else CF[d]=v;updBadge();updAB();render();}
+const KPILBL={ds:'DNT severa',dm:'DNT moderada',rk:'Riesgo DNT',ok:'Peso adecuado',ret:'Retraso talla',sob:'Sobrepeso/Ob.'};
+function kpiMatch(r,group){
+  const pt=r.__pt||'',te=r.__te||'';
+  switch(group){
+    case'ds':return['Desnutrición aguda severa','DNT Severa','DNT severa'].includes(pt);
+    case'dm':return['Desnutrición aguda moderada','DNT moderada'].includes(pt);
+    case'rk':return['Riesgo de desnutrición aguda','Riesgo DNT'].includes(pt);
+    case'ok':return pt==='Peso adecuado para la talla';
+    case'ret':return te==='Retraso en talla';
+    case'sob':return['Riesgo de sobrepeso','Sobrepeso','Obesidad'].includes(pt);
+    default:return true;
+  }
+}
 function renderTabs(){
   const c={'':ALL.length,'1':0,'2':0,'3':0};
   ALL.forEach(r=>{const t=r[K.tipo]||'';if(c[t]!==undefined)c[t]++;});
@@ -710,7 +724,7 @@ function renderTabs(){
   const lb={'':'Total','1':'< 6 meses','2':'6-71 meses','3':'Gestante'};
   document.getElementById('tipoTabs').innerHTML=['','1','2','3'].map(t=>`<button class="tab${TF===t?' active':''}" onclick="setTF('${t}')"><i class="ti ${ic[t]}"></i> ${lb[t]} <span class="tab-count">${c[t]}</span></button>`).join('');
 }
-function setTF(t){TF=t;CF={};PF.tipo=t;updBadge();updAB();renderTabs();render();}
+function setTF(t){TF=t;CF={};PF.tipo=t;const sel=document.getElementById('fpTipo');if(sel)sel.value=t;updBadge();updAB();renderTabs();render();}
 function render(){const d=getFiltered();renderKPIs(d);renderTable(d);renderCharts(d);}
 
 function renderKPIs(data){
@@ -721,7 +735,8 @@ function renderKPIs(data){
   const ok=ptC['Peso adecuado para la talla']||0;
   const ret=teC['Retraso en talla']||0;
   const sob=(ptC['Riesgo de sobrepeso']||0)+(ptC['Sobrepeso']||0)+(ptC['Obesidad']||0);
-  document.getElementById('kpis').innerHTML=[{l:'Total',v:data.length,c:'#05662F',p:null},{l:'DNT severa',v:ds,c:'#dc2626',p:Math.round(ds/tot*100)},{l:'DNT moderada',v:dm,c:'#d97706',p:Math.round(dm/tot*100)},{l:'Riesgo DNT',v:rk,c:'#f59e0b',p:Math.round(rk/tot*100)},{l:'Peso adecuado',v:ok,c:'#16a34a',p:Math.round(ok/tot*100)},{l:'Retraso talla',v:ret,c:'#7c3aed',p:Math.round(ret/tot*100)},{l:'Sobrepeso/Ob.',v:sob,c:'#0891b2',p:Math.round(sob/tot*100)}].map(k=>`<div class="kpi"><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v.toLocaleString()}</div>${k.p!==null?`<div class="kpi-sub">${k.p}%</div><div class="kpi-bar" style="width:${k.p}%;color:${k.c}"></div>`:''}</div>`).join('');
+  const aK=CF['kpi']||null;
+  document.getElementById('kpis').innerHTML=[{l:'Total',v:data.length,c:'#05662F',p:null,g:null},{l:'DNT severa',v:ds,c:'#dc2626',p:Math.round(ds/tot*100),g:'ds'},{l:'DNT moderada',v:dm,c:'#d97706',p:Math.round(dm/tot*100),g:'dm'},{l:'Riesgo DNT',v:rk,c:'#f59e0b',p:Math.round(rk/tot*100),g:'rk'},{l:'Peso adecuado',v:ok,c:'#16a34a',p:Math.round(ok/tot*100),g:'ok'},{l:'Retraso talla',v:ret,c:'#7c3aed',p:Math.round(ret/tot*100),g:'ret'},{l:'Sobrepeso/Ob.',v:sob,c:'#0891b2',p:Math.round(sob/tot*100),g:'sob'}].map(k=>{const active=k.g&&aK===k.g;const clickAttr=k.g?` onclick="applyCF('kpi','${k.g}')"`:'';const style=active?`border-color:${k.c};background:${k.c}11`:'';return`<div class="kpi" style="${style}"${clickAttr}><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v.toLocaleString()}</div>${k.p!==null?`<div class="kpi-sub">${k.p}%</div><div class="kpi-bar" style="width:${k.p}%;color:${k.c}"></div>`:''}</div>`;}).join('');
 }
 
 // ── TABLA ─────────────────────────────────────────────
