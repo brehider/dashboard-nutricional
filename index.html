@@ -687,8 +687,7 @@ async function init(){
     applyUrlParams();
     renderTabs();render();
     document.getElementById('btnRefresh').style.display='inline-flex';
-    const iframe=isInIframe()&&!new URLSearchParams(window.location.search).get('dl');
-    document.getElementById(iframe?'btnOpenTab':'btnExport').style.display='inline-flex';
+  document.getElementById('btnExport').style.display='inline-flex';
     document.getElementById('topMeta').textContent=`${all.length.toLocaleString()} · ${new Date().toLocaleTimeString('es-CO')}`;
     show('dashScreen');
     if(window._autoDownload){window._autoDownload=false;setTimeout(()=>exportExcel(),600);}
@@ -1034,8 +1033,7 @@ function exportExcel(){
   try{const name='Nutricional_Antioquia_'+new Date().toISOString().slice(0,10)+'.xlsx';const wbo=XLSX.write(wb,{bookType:'xlsx',type:'array'});const blob=new Blob([wbo],{type:'application/octet-stream'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);document.body.removeChild(a);},1000);}catch(e){alert('Error: '+e.message);}
 }
 function isInIframe(){try{return window.self!==window.top;}catch(e){return true;}}
-function handleExport(){if(isInIframe()){openInNewTab();return;}exportExcel();}
-function openInNewTab(){const u=window.location.href.split('?')[0]+'?dl=1';const w=window.open(u,'_blank','noopener,noreferrer');if(w)w.focus();}
+function handleExport(){exportExcel();}
 function applyUrlParams(){if(new URLSearchParams(window.location.search).get('dl')==='1')window._autoDownload=true;}
 window.addEventListener('load',init);
 </script>
